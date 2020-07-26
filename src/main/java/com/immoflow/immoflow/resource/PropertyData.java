@@ -1,6 +1,7 @@
 package com.immoflow.immoflow.resource;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -8,6 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "property")
 @Data
+@ToString
 public class PropertyData {
 
     //todo ggf nachimplemntieren

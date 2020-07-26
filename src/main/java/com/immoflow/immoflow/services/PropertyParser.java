@@ -3,12 +3,12 @@ package com.immoflow.immoflow.services;
 import com.immoflow.immoflow.resource.Keller;
 import com.immoflow.immoflow.resource.ParkingSpace;
 import com.immoflow.immoflow.resource.PropertyData;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.boot.CommandLineRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,20 +17,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@AllArgsConstructor
 public class PropertyParser {
 
-    private  String basicUrl;
-    private static final String USER_AGENT          = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+    private static final String                  USER_AGENT              = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
 
-
-
-    public PropertyData getPropertyDataFromCard() {
+    public PropertyData scrapeData(String basicUrl) {
         PropertyData propertyData = new PropertyData();
 
-        Document page = connectAndGetSinglePage();
+        Document page = connectAndGetPage(basicUrl);
         if (page != null) {
-
             extractAndSetTitle(propertyData, page);
 
             Element      zipCodeAndCityAndDistrict     = page.selectFirst(".zip-region-and-country");
@@ -45,7 +40,6 @@ public class PropertyParser {
             extraxtAndSetCostData(propertyData, page);
 
             extractAndSetAdditionalData(propertyData, page);
-
         }
         return propertyData;
     }
@@ -172,7 +166,7 @@ public class PropertyParser {
         }
     }
 
-    private Document connectAndGetSinglePage() {
+    Document connectAndGetPage(String basicUrl) {
         Document page = null;
         try {
             if (basicUrl.startsWith("http")) {
@@ -192,5 +186,6 @@ public class PropertyParser {
         }
         return page;
     }
+
 
 }

@@ -9,13 +9,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PropertyParserTest {
 
-    String url = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
+    private static final String URL = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
 
     @Test
     void getPropertyDataHappyFlow() {
 
-        PropertyParser propertyParser = new PropertyParser(url);
-        PropertyData   propertyData   = propertyParser.getPropertyDataFromCard();
+        PropertyParser propertyParser = new PropertyParser();
+        PropertyData   propertyData   = propertyParser.scrapeData(URL);
 
         //environment data
         assertEquals("**Nähe Seestern** Helle 3 Zi.-Whg. mit Einbauküche und Balkon, 40547 Düsseldorf-Lörick", propertyData.getTitle());
@@ -46,5 +46,4 @@ class PropertyParserTest {
         assertEquals(Keller.AVAILABLE, propertyData.getKeller()); //enum
         assertEquals("C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html", propertyData.getHttpLink());
     }
-
 }
