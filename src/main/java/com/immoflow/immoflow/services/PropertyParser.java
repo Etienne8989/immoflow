@@ -3,6 +3,7 @@ package com.immoflow.immoflow.services;
 import com.immoflow.immoflow.resource.Keller;
 import com.immoflow.immoflow.resource.ParkingSpace;
 import com.immoflow.immoflow.resource.PropertyData;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,11 +17,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@AllArgsConstructor
 public class PropertyParser {
 
-    private static final String BASIC_URL           = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
-    private static final String FILE_FOR_LOCAL_TEST = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
+    private  String basicUrl;
     private static final String USER_AGENT          = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+
+
 
     public PropertyData getPropertyDataFromCard() {
         PropertyData propertyData = new PropertyData();
@@ -41,54 +44,58 @@ public class PropertyParser {
 
             extraxtAndSetCostData(propertyData, page);
 
-            Element propertyType = page.selectFirst(".is24qa-typ");
-            if (propertyType != null) {
-                propertyData.setPropertyType(propertyType.text());
-            }
-            Element propertyFloor = page.selectFirst(".is24qa-etage");
-            if (propertyType != null) {
-                propertyData.setFloor(propertyFloor.text());
-            }
-            Element propertyAreaInM2 = page.selectFirst(".is24qa-wohnflaeche-ca");
-            if (propertyType != null) {
-                propertyData.setAreaInM2(propertyAreaInM2.text());
-            }
-            Element propertyMoveInDate = page.selectFirst(".is24qa-bezugsfrei-ab ");
-            if (propertyType != null) {
-                propertyData.setMoveInDate(propertyMoveInDate.text());
-            }
-            Element propertyRoomsCount = page.selectFirst(".is24qa-zimmer");
-            if (propertyType != null) {
-                propertyData.setRooms(propertyRoomsCount.text());
-            }
-            Element propertyBathRoomsCount = page.selectFirst(".is24qa-badezimmer");
-            if (propertyType != null) {
-                propertyData.setRoomsBath(propertyBathRoomsCount.text());
-            }
-            Element propertyParkingSpace = page.selectFirst(".is24qa-garage-stellplatz-label");
-            if (propertyType != null) {
-                propertyData.setParkingSpace(ParkingSpace.AVAILABLE);
-            }
-            Element petsAllowed = page.selectFirst(".is24qa-haustiere");
-            if (propertyType != null) {
-                propertyData.setPetsAllowed(petsAllowed.text());
-            }
-            Element propertyConstructionYear = page.selectFirst(".is24qa-baujahr");
-            if (propertyType != null) {
-                propertyData.setConstructionYear(propertyConstructionYear.text());
-            }
-            Element propertyLastRenovation = page.selectFirst(".is24qa-modernisierung-sanierung");
-            if (propertyType != null) {
-                propertyData.setLastRenovation(propertyLastRenovation.text());
-            }
-            Element propertyKeller = page.selectFirst(".is24qa-keller-label");
-            if (propertyKeller != null) {
-                propertyData.setKeller(Keller.AVAILABLE);
-            }
-            propertyData.setHttpLink(page.baseUri());
-            
+            extractAndSetAdditionalData(propertyData, page);
+
         }
         return propertyData;
+    }
+
+    private void extractAndSetAdditionalData(PropertyData propertyData, Document page) {
+        Element propertyType = page.selectFirst(".is24qa-typ");
+        if (propertyType != null) {
+            propertyData.setPropertyType(propertyType.text());
+        }
+        Element propertyFloor = page.selectFirst(".is24qa-etage");
+        if (propertyType != null) {
+            propertyData.setFloor(propertyFloor.text());
+        }
+        Element propertyAreaInM2 = page.selectFirst(".is24qa-wohnflaeche-ca");
+        if (propertyType != null) {
+            propertyData.setAreaInM2(propertyAreaInM2.text());
+        }
+        Element propertyMoveInDate = page.selectFirst(".is24qa-bezugsfrei-ab ");
+        if (propertyType != null) {
+            propertyData.setMoveInDate(propertyMoveInDate.text());
+        }
+        Element propertyRoomsCount = page.selectFirst(".is24qa-zimmer");
+        if (propertyType != null) {
+            propertyData.setRooms(propertyRoomsCount.text());
+        }
+        Element propertyBathRoomsCount = page.selectFirst(".is24qa-badezimmer");
+        if (propertyType != null) {
+            propertyData.setRoomsBath(propertyBathRoomsCount.text());
+        }
+        Element propertyParkingSpace = page.selectFirst(".is24qa-garage-stellplatz-label");
+        if (propertyParkingSpace != null) {
+            propertyData.setParkingSpace(ParkingSpace.AVAILABLE);
+        }
+        Element petsAllowed = page.selectFirst(".is24qa-haustiere");
+        if (propertyType != null) {
+            propertyData.setPetsAllowed(petsAllowed.text());
+        }
+        Element propertyConstructionYear = page.selectFirst(".is24qa-baujahr");
+        if (propertyType != null) {
+            propertyData.setConstructionYear(propertyConstructionYear.text());
+        }
+        Element propertyLastRenovation = page.selectFirst(".is24qa-modernisierung-sanierung");
+        if (propertyType != null) {
+            propertyData.setLastRenovation(propertyLastRenovation.text());
+        }
+        Element propertyKeller = page.selectFirst(".is24qa-keller-label");
+        if (propertyKeller != null) {
+            propertyData.setKeller(Keller.AVAILABLE);
+        }
+        propertyData.setHttpLink(page.baseUri());
     }
 
     private void extraxtAndSetCostData(PropertyData propertyData, Document page) {
@@ -168,14 +175,18 @@ public class PropertyParser {
     private Document connectAndGetSinglePage() {
         Document page = null;
         try {
-            //connect to file
-            File html = new File(FILE_FOR_LOCAL_TEST);
-            page = Jsoup.parse(html, null);
-            //connect to URL
-            //            page = Jsoup.connect(
-            //                    BASIC_URL)
-            //                    .userAgent(USER_AGENT)
-            //                    .get();
+            if (basicUrl.startsWith("http")) {
+                //connect to URL
+                page = Jsoup.connect(
+                        basicUrl)
+                        .userAgent(USER_AGENT)
+                        .get();
+            } else {
+                //connect to file
+                File html = new File(basicUrl);
+                page = Jsoup.parse(html, null);
+            }
+
         } catch (IOException ex) {
             log.debug("could not parse given website ", ex);
         }
