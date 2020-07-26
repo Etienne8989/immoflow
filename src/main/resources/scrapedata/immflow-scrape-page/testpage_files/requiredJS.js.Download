@@ -1,0 +1,101 @@
+
+window.de = window.de || {};
+de.is24 = de.is24 || {};
+de.is24.baufinanzierung = de.is24.baufinanzierung || {};
+de.is24.baufinanzierung.developmentMode = false;
+de.is24.baufinanzierung.secureIs24BaseUrl = "https://www.immobilienscout24.de";
+de.is24.baufinanzierung.pathPrefix = "/baufinanzierung";
+de.is24.baufinanzierung.apiURL = "https://www.immobilienscout24.de/baufinanzierung-api/restapi/api/financing/construction/v1.0";
+de.is24.baufinanzierung.apiURL_v2 = "https://www.immobilienscout24.de/baufinanzierung-api/restapi/api/financing/construction/v2";
+de.is24.baufinanzierung.apiURL_v3 = "https://www.immobilienscout24.de/baufinanzierung-api/restapi/api/financing/construction/v3";
+de.is24.baufinanzierung.fulfillmentApiURL = "https://www.immobilienscout24.de/baufinanzierung-fulfillment/restapi/api/financing/construction/v1.0";
+de.is24.baufinanzierung.fulfillmentApiURL_v2 = "https://www.immobilienscout24.de/baufinanzierung-fulfillment/restapi/api/financing/construction/v2";
+de.is24.baufinanzierung.rateMeApiUrl = "https://4vh57aiw64.execute-api.eu-west-1.amazonaws.com/prod/rateme";
+de.is24.baufinanzierung.rateMeApiKey = "3hFkbUOlNa15qAnAKns5X7fs8cUJ2qKR4sgITxTi";
+
+de.is24.baufinanzierung.featureSwitches = [{
+	name:   'PHONENUMBER_VALIDATION',
+	status: 'ENABLED',
+	active:true},{
+	name:   'OPTIMIZELY_FOR_MOBILE_ENABLED',
+	status: 'DISABLED',
+	active:false},{
+	name:   'DATA_PROTECTION',
+	status: 'ENABLED',
+	active:true},{
+	name:   'USE_VOICE_MESSAGE',
+	status: 'ENABLED',
+	active:true},{
+	name:   'PROCESS_GDPR_DELETE_REQUEST_EVENTS',
+	status: 'ENABLED',
+	active:true},{
+	name:   'SHOW_RESPONSE_RATE_BADGE',
+	status: 'ENABLED',
+	active:true},{
+	name:   'NEW_LIMIT_REACHED_EMAIL',
+	status: 'ENABLED',
+	active:true},{
+	name:   'SEGMENTATION_FORMULA_VERSION',
+	status: 'ENABLED',
+	active:true},{
+	name:   'REQUEST_ARVATO_SCORE',
+	status: 'ENABLED',
+	active:true},{
+	name:   'AUTOMATED_ANONYMISATION',
+	status: 'ENABLED',
+	active:true},{
+	name:   'SEGMENTATION_FORMULA_VIEW',
+	status: 'ENABLED',
+	active:true},{
+	name:   'DEBUG',
+	status: 'DISABLED',
+	active:false},{
+	name:   'TRADE_IN_PROGRAMME',
+	status: 'ENABLED',
+	active:true},{
+	name:   'NOP',
+	status: 'DISABLED',
+	active:false},{
+	name:   'PUSH_METRICS_TO_CLOUDWATCH',
+	status: 'ENABLED',
+	active:true},{
+	name:   'SELF_SERVICE_PROVIDER_NOTIFICATIONS',
+	status: 'ENABLED',
+	active:true},{
+	name:   'PROCESS_GDPR_INFO_REQUEST_EVENTS',
+	status: 'ENABLED',
+	active:true},{
+	name:   'OPTIMIZELY_ENABLED',
+	status: 'DISABLED',
+	active:false},{
+	name:   'OPTIMIZELYX',
+	status: 'ENABLED',
+	active:true},{
+	name:   'ANGULAR_DEBUG_MODE',
+	status: 'DISABLED',
+	active:false}];
+
+de.is24.baufinanzierung.datafile = {"version": "4", "rollouts": [{"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "12848940214", "key": "12848940214", "featureEnabled": true}], "id": "12848910432", "key": "12848910432", "layerId": "12836000046", "trafficAllocation": [{"entityId": "12848940214", "endOfRange": 10000}], "forcedVariations": {}}], "id": "12836000046"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "12843750016", "key": "12843750016", "featureEnabled": true}], "id": "12855160040", "key": "12855160040", "layerId": "12839780209", "trafficAllocation": [{"entityId": "12843750016", "endOfRange": 10000}], "forcedVariations": {}}], "id": "12839780209"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "12839120543", "key": "12839120543", "featureEnabled": true}], "id": "12834100057", "key": "12834100057", "layerId": "12851350190", "trafficAllocation": [{"entityId": "12839120543", "endOfRange": 10000}], "forcedVariations": {}}], "id": "12851350190"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "12864570045", "key": "12864570045", "featureEnabled": true}], "id": "12862720032", "key": "12862720032", "layerId": "12855210015", "trafficAllocation": [{"entityId": "12864570045", "endOfRange": 10000}], "forcedVariations": {}}], "id": "12855210015"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "12864630054", "key": "12864630054", "featureEnabled": true}], "id": "12845660042", "key": "12845660042", "layerId": "12855220037", "trafficAllocation": [{"entityId": "12864630054", "endOfRange": 10000}], "forcedVariations": {}}], "id": "12855220037"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "12872170036", "key": "12872170036", "featureEnabled": true}], "id": "12872150028", "key": "12872150028", "layerId": "12855280012", "trafficAllocation": [{"entityId": "12872170036", "endOfRange": 10000}], "forcedVariations": {}}], "id": "12855280012"}, {"experiments": [{"status": "Paused", "audienceIds": [], "variations": [{"variables": [], "id": "12862670061", "key": "12862670061", "featureEnabled": false}], "id": "12843770015", "key": "12843770015", "layerId": "12857070045", "trafficAllocation": [{"entityId": "12862670061", "endOfRange": 10000}], "forcedVariations": {}}], "id": "12857070045"}, {"experiments": [{"status": "Paused", "audienceIds": [], "variations": [{"variables": [], "id": "12843680022", "key": "12843680022", "featureEnabled": false}], "id": "12839830023", "key": "12839830023", "layerId": "12864730035", "trafficAllocation": [{"entityId": "12843680022", "endOfRange": 10000}], "forcedVariations": {}}], "id": "12864730035"}, {"experiments": [{"status": "Paused", "audienceIds": [], "variations": [{"variables": [], "id": "12845820027", "key": "12845820027", "featureEnabled": false}], "id": "12833510730", "key": "12833510730", "layerId": "12866280091", "trafficAllocation": [{"entityId": "12845820027", "endOfRange": 10000}], "forcedVariations": {}}], "id": "12866280091"}, {"experiments": [{"status": "Not started", "audienceIds": [], "variations": [{"variables": [], "id": "13027050129", "key": "13027050129", "featureEnabled": false}], "id": "13025150240", "key": "13025150240", "layerId": "13023520330", "trafficAllocation": [{"entityId": "13027050129", "endOfRange": 0}], "forcedVariations": {}}], "id": "13023520330"}, {"experiments": [{"status": "Not started", "audienceIds": [], "variations": [{"variables": [], "id": "13030990209", "key": "13030990209", "featureEnabled": false}], "id": "13036540250", "key": "13036540250", "layerId": "13040800175", "trafficAllocation": [{"entityId": "13030990209", "endOfRange": 0}], "forcedVariations": {}}], "id": "13040800175"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "13266800209", "key": "13266800209", "featureEnabled": true}], "id": "13261020141", "key": "13261020141", "layerId": "13278440054", "trafficAllocation": [{"entityId": "13266800209", "endOfRange": 10000}], "forcedVariations": {}}], "id": "13278440054"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "13360280159", "key": "13360280159", "featureEnabled": true}], "id": "13335410348", "key": "13335410348", "layerId": "13347140063", "trafficAllocation": [{"entityId": "13360280159", "endOfRange": 10000}], "forcedVariations": {}}], "id": "13347140063"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "15436570246", "key": "15436570246", "featureEnabled": true}], "id": "15434760152", "key": "15434760152", "layerId": "15448470213", "trafficAllocation": [{"entityId": "15436570246", "endOfRange": 10000}], "forcedVariations": {}}], "id": "15448470213"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "15850870530", "key": "15850870530", "featureEnabled": true}], "id": "15867770033", "key": "15867770033", "layerId": "15880930686", "trafficAllocation": [{"entityId": "15850870530", "endOfRange": 10000}], "forcedVariations": {}}], "id": "15880930686"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [{"id": "16733420181", "value": "2"}], "id": "16729540417", "key": "16729540417", "featureEnabled": true}], "id": "16741200174", "key": "16741200174", "layerId": "16725381076", "trafficAllocation": [{"entityId": "16729540417", "endOfRange": 10000}], "forcedVariations": {}}], "id": "16725381076"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "16808050140", "key": "16808050140", "featureEnabled": true}], "id": "16788850344", "key": "16788850344", "layerId": "16819970014", "trafficAllocation": [{"entityId": "16808050140", "endOfRange": 10000}], "forcedVariations": {}}], "id": "16819970014"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "17597540846", "key": "17597540846", "featureEnabled": true}], "id": "17609430659", "key": "17609430659", "layerId": "17615090820", "trafficAllocation": [{"entityId": "17597540846", "endOfRange": 10000}], "forcedVariations": {}}], "id": "17615090820"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "17830391078", "key": "17830391078", "featureEnabled": true}], "id": "17853970153", "key": "17853970153", "layerId": "17849800497", "trafficAllocation": [{"entityId": "17830391078", "endOfRange": 10000}], "forcedVariations": {}}], "id": "17849800497"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "17949532391", "key": "17949532391", "featureEnabled": true}], "id": "17912913334", "key": "17912913334", "layerId": "17961680407", "trafficAllocation": [{"entityId": "17949532391", "endOfRange": 10000}], "forcedVariations": {}}], "id": "17961680407"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "18063310454", "key": "18063310454", "featureEnabled": true}], "id": "18065001540", "key": "18065001540", "layerId": "18031791407", "trafficAllocation": [{"entityId": "18063310454", "endOfRange": 10000}], "forcedVariations": {}}], "id": "18031791407"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "18076370116", "key": "18076370116", "featureEnabled": true}], "id": "18076230213", "key": "18076230213", "layerId": "18038782236", "trafficAllocation": [{"entityId": "18076370116", "endOfRange": 10000}], "forcedVariations": {}}], "id": "18038782236"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "18085800677", "key": "18085800677", "featureEnabled": true}], "id": "18087760470", "key": "18087760470", "layerId": "18077272009", "trafficAllocation": [{"entityId": "18085800677", "endOfRange": 10000}], "forcedVariations": {}}], "id": "18077272009"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "18144120216", "key": "18144120216", "featureEnabled": true}], "id": "18138820819", "key": "18138820819", "layerId": "18130600687", "trafficAllocation": [{"entityId": "18144120216", "endOfRange": 10000}], "forcedVariations": {}}], "id": "18130600687"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "18183940364", "key": "18183940364", "featureEnabled": true}], "id": "18214940250", "key": "18214940250", "layerId": "18201390512", "trafficAllocation": [{"entityId": "18183940364", "endOfRange": 10000}], "forcedVariations": {}}], "id": "18201390512"}, {"experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "18246281263", "key": "18246281263", "featureEnabled": true}], "id": "18256121104", "key": "18256121104", "layerId": "18222911261", "trafficAllocation": [{"entityId": "18246281263", "endOfRange": 10000}], "forcedVariations": {}}], "id": "18222911261"}], "typedAudiences": [], "anonymizeIP": true, "projectId": "12328850739", "variables": [], "featureFlags": [{"experimentIds": [], "rolloutId": "12864730035", "variables": [], "id": "12835970089", "key": "OPTIMIZELY_FOR_MOBILE_ENABLED"}, {"experimentIds": [], "rolloutId": "12851350190", "variables": [], "id": "12835970091", "key": "PUSH_METRICS_TO_CLOUDWATCH"}, {"experimentIds": [], "rolloutId": "12855210015", "variables": [], "id": "12840830262", "key": "MY_SCOUT_CHANGE_PROFILE_WHILE_FULFILLMENT_SUBSCRIPTION"}, {"experimentIds": [], "rolloutId": "12855220037", "variables": [], "id": "12843760006", "key": "REQUEST_ARVATO_SCORE"}, {"experimentIds": [], "rolloutId": "12857070045", "variables": [], "id": "12849540035", "key": "OPTIMIZELY_ENABLED"}, {"experimentIds": [], "rolloutId": "12836000046", "variables": [], "id": "12851680005", "key": "PHONENUMBER_VALIDATION"}, {"experimentIds": [], "rolloutId": "12866280091", "variables": [], "id": "12862810027", "key": "ANGULAR_DEBUG_MODE"}, {"experimentIds": [], "rolloutId": "12855280012", "variables": [], "id": "12864630055", "key": "PROCESS_GDPR_INFO_REQUEST_EVENTS"}, {"experimentIds": [], "rolloutId": "12839780209", "variables": [], "id": "12868430014", "key": "CONSUME_GDPR_INFO_REQUEST_EVENTS"}, {"experimentIds": [], "rolloutId": "13040800175", "variables": [], "id": "13032930463", "key": "DEBUG"}, {"experimentIds": [], "rolloutId": "13023520330", "variables": [], "id": "13042460152", "key": "NOP"}, {"experimentIds": [], "rolloutId": "13278440054", "variables": [], "id": "13276560130", "key": "S3_PORTAL_FILES"}, {"experimentIds": [], "rolloutId": "13347140063", "variables": [], "id": "13347190043", "key": "OPTIMIZELYX"}, {"experimentIds": [], "rolloutId": "15448470213", "variables": [], "id": "15444460329", "key": "SEGMENTATION_FORMULA_PRICING"}, {"experimentIds": [], "rolloutId": "15880930686", "variables": [], "id": "15895060420", "key": "SELF_SERVICE"}, {"experimentIds": [], "rolloutId": "16725381076", "variables": [{"defaultValue": "2", "type": "integer", "id": "16733420181", "key": "version"}], "id": "16735440276", "key": "SEGMENTATION_FORMULA_VERSION"}, {"experimentIds": [], "rolloutId": "16819970014", "variables": [], "id": "16800480224", "key": "SEGMENTATION_FORMULA_VIEW"}, {"experimentIds": [], "rolloutId": "17615090820", "variables": [], "id": "17609230685", "key": "CJ_WEB_AB_TEST_SUPPORT"}, {"experimentIds": [], "rolloutId": "17849800497", "variables": [], "id": "17849960147", "key": "USE_VOICE_MESSAGE"}, {"experimentIds": [], "rolloutId": "17961680407", "variables": [], "id": "17946070858", "key": "DATA_PROTECTION"}, {"experimentIds": [], "rolloutId": "18031791407", "variables": [], "id": "18042090700", "key": "TRADE_IN_PROGRAMME"}, {"experimentIds": [], "rolloutId": "18038782236", "variables": [], "id": "18071461862", "key": "NEW_LIMIT_REACHED_EMAIL"}, {"experimentIds": [], "rolloutId": "18077272009", "variables": [], "id": "18087960008", "key": "AUTOMATED_ANONYMISATION"}, {"experimentIds": [], "rolloutId": "18130600687", "variables": [], "id": "18169130174", "key": "PROCESS_GDPR_DELETE_REQUEST_EVENTS"}, {"experimentIds": [], "rolloutId": "18201390512", "variables": [], "id": "18201480825", "key": "SHOW_RESPONSE_RATE_BADGE"}, {"experimentIds": [], "rolloutId": "18222911261", "variables": [], "id": "18263621145", "key": "SELF_SERVICE_PROVIDER_NOTIFICATIONS"}], "experiments": [{"status": "Running", "audienceIds": [], "variations": [{"variables": [], "id": "18248520375", "key": "default"}, {"variables": [], "id": "18267280873", "key": "no_page"}], "id": "18252771420", "key": "affordability_no_login_page", "layerId": "18222770922", "trafficAllocation": [{"entityId": "18267280873", "endOfRange": 5000}, {"entityId": "18248520375", "endOfRange": 10000}], "forcedVariations": {}}], "audiences": [{"conditions": "[\"or\", {\"match\": \"exact\", \"name\": \"$opt_dummy_attribute\", \"type\": \"custom_attribute\", \"value\": \"$opt_dummy_value\"}]", "id": "$opt_dummy_audience", "name": "Optimizely-Generated Audience for Backwards Compatibility"}], "groups": [], "attributes": [{"id": "17069131723", "key": "browser"}, {"id": "17082011732", "key": "device"}], "botFiltering": false, "accountId": "8298686785", "events": [{"experimentIds": [], "id": "14094840197", "key": "leadfinancecomparisonsuccess"}, {"experimentIds": [], "id": "14115070046", "key": "leadfinancecomparison"}, {"experimentIds": [], "id": "15352680133", "key": "leadfinanceleadengine"}, {"experimentIds": [], "id": "15372090536", "key": "leadfinanceleadenginesuccess"}, {"experimentIds": [], "id": "15374920305", "key": "clickoutfinanceprofile"}, {"experimentIds": [], "id": "15389110863", "key": "clickoutfinancelandingpage"}, {"experimentIds": [], "id": "15416560098", "key": "clickoutfinanceany"}, {"experimentIds": [], "id": "16700710160", "key": "leadfinance"}, {"experimentIds": [], "id": "16729040275", "key": "leadfinancesuccess"}, {"experimentIds": ["18252771420"], "id": "18249981870", "key": "affordabilitycalculator"}, {"experimentIds": ["18252771420"], "id": "18301781604", "key": "affordabilitycalculator_token"}], "revision": "925"};
+
+de.is24.baufinanzierung.optimizelyXAppId = "BAUFI_OPTIMIZELY_X_SERVICE";
+de.is24.baufinanzierung.optimizelyXUserIdCookieName = "ssoOptimizelyUniqueVisitorId";
+
+	de.is24.baufinanzierung.webpackPublicPath = "https://www.finanzen.immobilienscout24.de/baufinanzierung/static/js/generated/";
+
+de.is24.baufinanzierung.phoneUtilApiURL = "https://api.finanzen.immobilienscout24.de/phonenumber-utils";
+
+de.is24.baufinanzierung.gacApiUrl = "https://www.immobilienscout24.de/geoautocomplete/v3/locations.json";
+de.is24.baufinanzierung.bankDataApiUrl = "https://api.finanzen.immobilienscout24.de/bankdata-autocompletion/hausbank/bankdata";
+de.is24.baufinanzierung.gacEntityApiUrl = "https://www.immobilienscout24.de/geoautocomplete/v3/entities/";
+de.is24.baufinanzierung.gacApiKey = "478f6b281407d06ff2d785c22132edd6";
+
+de.is24.baufinanzierung.advertisementEnabled = true;
+
+window.is24 = window.is24 || {};
+window.is24.baufinanzierung = de.is24.baufinanzierung;
+
+de.is24.baufinanzierung.tracking = de.is24.baufinanzierung.tracking || {}
+de.is24.baufinanzierung.tracking.enabled = de.is24.baufinanzierung.tracking.enabled || true;
+de.is24.baufinanzierung.tracking.host = de.is24.baufinanzierung.tracking.host || "tracking.immobilienscout24.de";
+de.is24.baufinanzierung.tracking.moduleName = de.is24.baufinanzierung.tracking.moduleName || "baufinanzierung";
+de.is24.baufinanzierung.tracking.satellite = de.is24.baufinanzierung.tracking.satellite || false;
