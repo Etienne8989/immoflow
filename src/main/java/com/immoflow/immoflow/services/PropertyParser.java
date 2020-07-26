@@ -1,44 +1,181 @@
 package com.immoflow.immoflow.services;
 
+import com.immoflow.immoflow.resource.Keller;
+import com.immoflow.immoflow.resource.ParkingSpace;
 import com.immoflow.immoflow.resource.PropertyData;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 public class PropertyParser {
 
-    private static final String BASIC_URL  = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
-    private static final String FILE_FOR_LOCAL_TEST  = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
-    private static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+    private static final String BASIC_URL           = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
+    private static final String FILE_FOR_LOCAL_TEST = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
+    private static final String USER_AGENT          = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
 
     public PropertyData getPropertyDataFromCard() {
-
         PropertyData propertyData = new PropertyData();
 
-        Document page    = connectAndGetSinglePage();
-        Element  element = page.selectFirst(".criteriagroup #expose-title");
+        Document page = connectAndGetSinglePage();
+        if (page != null) {
 
-        propertyData.setTitle(element.text());
+            extractAndSetTitle(propertyData, page);
 
+            Element      zipCodeAndCityAndDistrict     = page.selectFirst(".zip-region-and-country");
+            List<String> zipCodeAndCityAndDistrictList = Arrays.asList(zipCodeAndCityAndDistrict.text().split("\\s"));
+            extractAndSetZipCode(propertyData, zipCodeAndCityAndDistrictList);
+            extractAndSetCity(propertyData, zipCodeAndCityAndDistrictList);
+            extractAndSetDistrict(propertyData, zipCodeAndCityAndDistrictList);
+
+            Element street = zipCodeAndCityAndDistrict.previousElementSibling();
+            extractAndSetStreet(propertyData, street);
+
+            extraxtAndSetCostData(propertyData, page);
+
+            Element propertyType = page.selectFirst(".is24qa-typ");
+            if (propertyType != null) {
+                propertyData.setPropertyType(propertyType.text());
+            }
+            Element propertyFloor = page.selectFirst(".is24qa-etage");
+            if (propertyType != null) {
+                propertyData.setFloor(propertyFloor.text());
+            }
+            Element propertyAreaInM2 = page.selectFirst(".is24qa-wohnflaeche-ca");
+            if (propertyType != null) {
+                propertyData.setAreaInM2(propertyAreaInM2.text());
+            }
+            Element propertyMoveInDate = page.selectFirst(".is24qa-bezugsfrei-ab ");
+            if (propertyType != null) {
+                propertyData.setMoveInDate(propertyMoveInDate.text());
+            }
+            Element propertyRoomsCount = page.selectFirst(".is24qa-zimmer");
+            if (propertyType != null) {
+                propertyData.setRooms(propertyRoomsCount.text());
+            }
+            Element propertyBathRoomsCount = page.selectFirst(".is24qa-badezimmer");
+            if (propertyType != null) {
+                propertyData.setRoomsBath(propertyBathRoomsCount.text());
+            }
+            Element propertyParkingSpace = page.selectFirst(".is24qa-garage-stellplatz-label");
+            if (propertyType != null) {
+                propertyData.setParkingSpace(ParkingSpace.AVAILABLE);
+            }
+            Element petsAllowed = page.selectFirst(".is24qa-haustiere");
+            if (propertyType != null) {
+                propertyData.setPetsAllowed(petsAllowed.text());
+            }
+            Element propertyConstructionYear = page.selectFirst(".is24qa-baujahr");
+            if (propertyType != null) {
+                propertyData.setConstructionYear(propertyConstructionYear.text());
+            }
+            Element propertyLastRenovation = page.selectFirst(".is24qa-modernisierung-sanierung");
+            if (propertyType != null) {
+                propertyData.setLastRenovation(propertyLastRenovation.text());
+            }
+            Element propertyKeller = page.selectFirst(".is24qa-keller-label");
+            if (propertyKeller != null) {
+                propertyData.setKeller(Keller.AVAILABLE);
+            }
+            propertyData.setHttpLink(page.baseUri());
+            
+        }
         return propertyData;
+    }
+
+    private void extraxtAndSetCostData(PropertyData propertyData, Document page) {
+        Element costData = page.getElementsByAttributeValue("data-qa", "is24qa-kosten-label").first().nextElementSibling();
+
+        String propertyCostCold = Optional.ofNullable(costData.getElementsByClass("is24qa-kaltmiete"))
+                .map(Elements::first)
+                .map(Element::text)
+                .orElse(null);
+        propertyData.setCostsCold(propertyCostCold);
+
+        String propertyCostAdditional = Optional.ofNullable(costData.getElementsByClass("is24qa-nebenkosten"))
+                .map(Elements::first)
+                .map(Element::text)
+                .orElse(null);
+        propertyData.setCostsAdditional(propertyCostAdditional);
+
+        String propertyCostsParkingSpace = Optional.ofNullable(costData.getElementsByClass("is24qa-miete-fuer-garagestellplatz"))
+                .map(Elements::first)
+                .map(Element::text)
+                .orElse(null);
+        propertyData.setCostsParkingSpace(propertyCostsParkingSpace);
+
+        String propertyCostTotal = Optional.ofNullable(costData.getElementsByClass("is24qa-gesamtmiete"))
+                .map(Elements::first)
+                .map(Element::text)
+                .orElse(null);
+        propertyData.setCostsTotal(propertyCostTotal);
+
+        String propertyKaution = Optional.ofNullable(costData.getElementsByClass("is24qa-kaution-o-genossenschaftsanteile"))
+                .map(Elements::first)
+                .map(Element::text)
+                .orElse(null);
+        propertyData.setKaution(propertyKaution);
+    }
+
+    private void extractAndSetStreet(PropertyData propertyData, Element street) {
+        if (street != null) {
+            if (street.text().contains(",")) {
+                propertyData.setStreet(street.text().substring(0, street.text().indexOf(",")));
+            } else {
+                propertyData.setStreet(street.text());
+            }
+        }
+    }
+
+    private void extractAndSetTitle(PropertyData propertyData, Document page) {
+        Element title = page.selectFirst(".criteriagroup #expose-title");
+        if (title != null) {
+            propertyData.setTitle(title.text());
+        }
+    }
+
+    private void extractAndSetDistrict(PropertyData propertyData, List<String> zipCodeAndCityAndDistrictList) {
+        if (zipCodeAndCityAndDistrictList.size() >= 3) {
+            propertyData.setDistrict(zipCodeAndCityAndDistrictList.get(2));
+        }
+    }
+
+    private void extractAndSetCity(PropertyData propertyData, List<String> zipCodeAndCityAndDistrictList) {
+        if (zipCodeAndCityAndDistrictList.size() >= 2) {
+            String cityPreState = zipCodeAndCityAndDistrictList.get(1);
+            if (cityPreState.contains(",")) {
+                propertyData.setCity(cityPreState.substring(0, cityPreState.indexOf(",")));
+            } else {
+                propertyData.setCity(cityPreState);
+            }
+        }
+    }
+
+    private void extractAndSetZipCode(PropertyData propertyData, List<String> zipCodeAndCityAndDistrictList) {
+        if (zipCodeAndCityAndDistrictList.size() >= 1) {
+            propertyData.setZipCode(zipCodeAndCityAndDistrictList.get(0));
+        }
     }
 
     private Document connectAndGetSinglePage() {
         Document page = null;
         try {
             //connect to file
-            File     html   = new File(FILE_FOR_LOCAL_TEST);
-            page  = Jsoup.parse(html, null);
+            File html = new File(FILE_FOR_LOCAL_TEST);
+            page = Jsoup.parse(html, null);
             //connect to URL
-//            page = Jsoup.connect(
-//                    BASIC_URL)
-//                    .userAgent(USER_AGENT)
-//                    .get();
+            //            page = Jsoup.connect(
+            //                    BASIC_URL)
+            //                    .userAgent(USER_AGENT)
+            //                    .get();
         } catch (IOException ex) {
             log.debug("could not parse given website ", ex);
         }

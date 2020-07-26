@@ -16,7 +16,7 @@ public class PropertyData {
 
     private String id;
     private String title;
-    private String country;
+    private String country = "Deutschland";
     private String city;
     private String district;
     private String street;
@@ -29,7 +29,7 @@ public class PropertyData {
     private String kaution;
     private String rooms;
     private String roomsBath;
-    private String parkingSpace;
+    private ParkingSpace parkingSpace;
     private String moveInDate;
     private String constructionYear;
     private String lastRenovation;
@@ -37,7 +37,7 @@ public class PropertyData {
     private String propertyType;
     private String floor;
     private String petsAllowed;
-    private String keller;
+    private Keller keller;
     private String httpLink;
 
 }
