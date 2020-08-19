@@ -14,15 +14,15 @@ public class ScrapeCommandlineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String               mainUrl        = "https://www.immobilienscout24.de/Suche/de/nordrhein-westfalen/duesseldorf/wohnung-mieten?pagenumber=";
-        final PropertyParser propertyParser = new PropertyParser();
-        Document             startPage      = propertyParser.connectAndGetPage(mainUrl + "1");
+        String                    mainUrl             = "https://www.immobilienscout24.de/Suche/de/nordrhein-westfalen/duesseldorf/wohnung-mieten?pagenumber=";
+        final PropertyParserJsoup propertyParserJsoup = new PropertyParserJsoup();
+        Document                  startPage           = propertyParserJsoup.connectAndGetPage(mainUrl + "1");
         if (startPage != null) {
             System.out.println("getting started");
             int pageCount = startPage.getElementsByAttributeValue("aria-label", "Seitenauswahl").first().childrenSize();
             System.out.println("page count: " + pageCount);
             for (int i = 0; i < pageCount; i++) {
-                Document page = propertyParser.connectAndGetPage(mainUrl + i);
+                Document page = propertyParserJsoup.connectAndGetPage(mainUrl + i);
                 System.out.println("scrape page ++ " + i + " ++");
                 if (page != null) {
 
@@ -37,7 +37,7 @@ public class ScrapeCommandlineRunner implements CommandLineRunner {
 
                     for (String url : filteredUrls) {
                         System.out.println(url);
-                        System.out.println(propertyParser.scrapeData(url));
+                        System.out.println(propertyParserJsoup.scrapeData(url));
                     }
 
                 }

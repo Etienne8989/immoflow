@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PropertyParserTest {
+class PropertyParserJsoupTest {
 
     private static final String URL = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
 
     @Test
     void getPropertyDataHappyFlow() {
 
-        PropertyParser propertyParser = new PropertyParser();
+        PropertyParser propertyParser = new PropertyParserJsoup();
         PropertyData   propertyData   = propertyParser.scrapeData(URL);
 
         //environment data
@@ -27,7 +27,7 @@ class PropertyParserTest {
         //costs
         assertEquals("995 €", propertyData.getCostsCold());
         assertEquals("+ 350 €", propertyData.getCostsAdditional());
-        //        assertEquals("in Nebenkosten enthalten",propertyData.getCostsHeating());
+        //assertEquals("in Nebenkosten enthalten",propertyData.getCostsHeating());
         assertEquals("1.345 €", propertyData.getCostsTotal());
         assertEquals("70 €", propertyData.getCostsParkingSpace());
         assertEquals("3195", propertyData.getKaution());
