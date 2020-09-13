@@ -4,15 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ProxyScroperJsoupTest {
+class ProxyParserJsoupTest {
 
 
     @Test
     void scrapeProxied() throws IOException, InterruptedException {
-        ProxyScroperJsoup proxyScroperJsoup = new ProxyScroperJsoup();
-        proxyScroperJsoup.scrapeProxied();
+        ProxyParserJsoup proxyParserJsoup = new ProxyParserJsoup();
+        proxyParserJsoup.scrapeProxied();
     }
 
 }

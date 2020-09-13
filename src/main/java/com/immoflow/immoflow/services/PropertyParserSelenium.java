@@ -33,8 +33,6 @@ public class PropertyParserSelenium implements PropertyParser {
         //            extraxtAndSetCostData(propertyData, page);
         //            extractAndSetAdditionalData(propertyData, page);
 
-        
-
         return propertyData;
     }
 
