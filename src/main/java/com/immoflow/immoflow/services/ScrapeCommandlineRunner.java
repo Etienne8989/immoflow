@@ -1,5 +1,6 @@
 package com.immoflow.immoflow.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ScrapeCommandlineRunner implements CommandLineRunner {
 
     @Override
@@ -18,12 +20,12 @@ public class ScrapeCommandlineRunner implements CommandLineRunner {
         final PropertyParserJsoup propertyParserJsoup = new PropertyParserJsoup();
         Document                  startPage           = propertyParserJsoup.connectAndGetPage(mainUrl + "1");
         if (startPage != null) {
-            System.out.println("getting started");
+            log.info("getting started");
             int pageCount = startPage.getElementsByAttributeValue("aria-label", "Seitenauswahl").first().childrenSize();
-            System.out.println("page count: " + pageCount);
+            log.info("page count: " + pageCount);
             for (int i = 0; i < pageCount; i++) {
                 Document page = propertyParserJsoup.connectAndGetPage(mainUrl + i);
-                System.out.println("scrape page ++ " + i + " ++");
+                log.info("scrape page ++ " + i + " ++");
                 if (page != null) {
 
                     //todo rausfinden warum css selector für die seite wohungs urls nicht funktioniet
