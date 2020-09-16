@@ -62,7 +62,7 @@ public class ProxyParserJsoup {
                 log.info("+++ the proxy is working and will be added to the proxy list +++\n");
                 workingProxiesList.add(workingProxy);
             } else {
-                log.info("the proxy is NOT working and and will be discarded\n");
+                log.info("the proxy is NOT working and will be discarded\n");
             }
         }
         return workingProxiesList;
