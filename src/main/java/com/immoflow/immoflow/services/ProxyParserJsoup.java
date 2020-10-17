@@ -9,6 +9,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
 import java.net.URL;
@@ -17,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
@@ -29,15 +33,24 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
     private static final String  URL_SHOW_MY_IP    = "https://www.showmyip.com";
     private static final Integer JSOUP_TIMEOUT     = 7000;
 
+    //restricts the number of proxies which is used for scraping
+    //set a specific number or no-limit for all proxies that you can get
+    @Value("${scraper.proxies.workingProxyLimit:9999}")
+    private static int workingProxyLimit;
+    @Value("${scraper.proxies.timeOutForAllRunningThreadsInSec:60}")
+    private static int timeOutForAllRunningThreadsInSec;
+    @Value("${scraper.proxies.maxActiveThreadNumber:5}")
+    private static int maxActiveThreadNumber;
+
 
     public List<SimpleProxy> scrapeProxies() {
-        ArrayList<String> proxyList        = screapeProxiesFromSllProxies();
-        List<SimpleProxy>      workingProxyList = testProxyConnections(proxyList);
+        ArrayList<String> proxyList        = scrapeProxiesFromSllProxies();
+        List<SimpleProxy> workingProxyList = asyncProxyTest(proxyList);
         log.info("\n\n the following proxies are working: \n\n" + workingProxyList);
         return workingProxyList;
     }
 
-    private ArrayList<String> screapeProxiesFromSllProxies() {
+    private ArrayList<String> scrapeProxiesFromSllProxies() {
         Document          page      = connectAndGetPage(URL_SSL_PROXIES);
         Element           tableBody = page.select("tbody").first();
         Elements          tableRows = tableBody.select("tr");
@@ -53,25 +66,53 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
         return proxyList;
     }
 
-    private List<SimpleProxy> testProxyConnections(ArrayList<String> proxyList) {
+    List<SimpleProxy> asyncProxyTest(ArrayList<String> proxyList) {
         log.info("the proxy testing is getting started...\n\n");
-        List<SimpleProxy> workingProxiesList = new ArrayList<>();
-        for (String ip : proxyList) {
-            String[] ipAndPort = ip.split(":");
-            log.info("test connection with host " + ipAndPort[0] + " and port " + ipAndPort[1]);
-            SimpleProxy workingProxy = getIpWithJsoup(ipAndPort[0], ipAndPort[1]);
-            if (workingProxy != null) {
-                log.info("+++ the proxy is working and will be added to the proxy list +++\n");
-                workingProxiesList.add(workingProxy);
-            } else {
-                log.info("the proxy is NOT working and and will be discarded\n");
-            }
+
+        log.info("the set proxy limit is {} \n\n", workingProxyLimit);
+
+        List<SimpleProxy> workingProxiesList = new ArrayList<SimpleProxy>();
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+
+        for (String proxy : proxyList) {
+            executor.submit(() -> {
+                testProxy(proxy, workingProxiesList);
+                log.info("current number of active threads: {}", executor.getActiveCount());
+
+                if (workingProxiesList.size() >= workingProxyLimit) {
+                    log.info("The size of workingProxyLimit ({}) is reached. The current number of available proxies is {}", workingProxyLimit, workingProxiesList.size());
+                    log.info("running threads will be terminated");
+                    executor.shutdownNow();
+                }
+            });
         }
+
+        try {
+            if (!executor.awaitTermination(timeOutForAllRunningThreadsInSec, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+                log.info("all proxies are processed. The current number of available proxies is {}", workingProxiesList.size());
+            }
+        } catch (InterruptedException e) {
+            log.debug("the current test thread has been interrupted", e);
+        }
+
         return workingProxiesList;
     }
 
+    private void testProxy(String proxyString, List<SimpleProxy> workingProxiesList) {
+        String[] ipAndPort = proxyString.split(":");
+        log.info("test connection with host " + ipAndPort[0] + " and port " + ipAndPort[1]);
+        SimpleProxy workingProxy = getIpWithJsoup(ipAndPort[0], ipAndPort[1]);
+        if (workingProxy != null) {
+            log.info("+++ the proxy is working and will be added to the proxy list +++\n");
+            workingProxiesList.add(workingProxy);
+        } else {
+            log.info("the proxy is NOT working and and will be discarded\n");
+        }
+    }
+
     private SimpleProxy getIpWithJsoup(String proxyHost, String proxyPort) {
-        Document document     = connectAndGetPage(URL_SHOW_MY_IP, proxyHost, proxyPort);
+        Document    document    = connectAndGetPage(URL_SHOW_MY_IP, proxyHost, proxyPort);
         SimpleProxy simpleProxy = null;
         if (document != null) {
             Elements ip = document.select(".iptab td:nth-child(2)");

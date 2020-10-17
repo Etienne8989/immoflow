@@ -5,6 +5,7 @@ import com.immoflow.immoflow.resource.UserAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,18 +15,6 @@ import java.util.List;
 @Slf4j
 public class ScrapeUtilsJsoup {
 
-    UserAgentParser<UserAgent> userAgentParser;
-    ProxyParser<SimpleProxy>   proxyParser;
-
-    public Document getPageWithProxyAndUserAgent(String basicUrl) {
-
-        List<UserAgent> userAgentList = userAgentParser.getUserAgentList();
-        Collections.shuffle(userAgentList);
-        List<SimpleProxy> workingProxies = proxyParser.scrapeProxies();
-        Collections.shuffle(workingProxies);
-
-        return getPageByContext(basicUrl, userAgentList, workingProxies);
-    }
 
     private Document getPageByContext(String basicUrl, List<UserAgent> userAgentList, List<SimpleProxy> workingProxies) {
         Document page = null;
@@ -106,9 +95,5 @@ public class ScrapeUtilsJsoup {
         return page;
     }
 
-    public ScrapeUtilsJsoup(UserAgentParser<UserAgent> userAgentParser, ProxyParser<SimpleProxy> proxyParser) {
-        this.userAgentParser = userAgentParser;
-        this.proxyParser = proxyParser;
-    }
 
 }

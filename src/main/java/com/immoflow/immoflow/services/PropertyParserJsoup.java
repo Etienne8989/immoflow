@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,13 +20,18 @@ public class PropertyParserJsoup implements PropertyParser {
 
     UserAgentParser<UserAgent> userAgentParser;
     ProxyParser<SimpleProxy>   proxyParser;
-    ScrapeUtilsJsoup scrapeUtilsJsoup = new ScrapeUtilsJsoup(userAgentParser, proxyParser);
+    ScrapeUtilsJsoup scrapeUtilsJsoup;
 
     @Override
     public PropertyData scrapeData(String basicUrl) {
         PropertyData propertyData = new PropertyData();
 
-        Document page =scrapeUtilsJsoup.getPageWithProxyAndUserAgent(basicUrl);
+        List<UserAgent> userAgentList = userAgentParser.getUserAgentList();
+        Collections.shuffle(userAgentList);
+        List<SimpleProxy> workingProxies = proxyParser.scrapeProxies();
+        Collections.shuffle(workingProxies);
+
+        Document page =getPageByContext(basicUrl,userAgentList,workingProxies);
 
         if (page != null) {
             extractAndSetTitle(propertyData, page);
@@ -44,6 +50,18 @@ public class PropertyParserJsoup implements PropertyParser {
             extractAndSetAdditionalData(propertyData, page);
         }
         return propertyData;
+    }
+
+    private Document getPageByContext(String basicUrl, List<UserAgent> userAgentList, List<SimpleProxy> workingProxies) {
+        Document page = null;
+        if (!workingProxies.isEmpty() && !userAgentList.isEmpty()) {
+            page = scrapeUtilsJsoup.connectAndGetPage(basicUrl, workingProxies.get(0), userAgentList.get(0));
+        } else if (!userAgentList.isEmpty()) {
+            page = scrapeUtilsJsoup.connectAndGetPage(basicUrl, userAgentList.get(0));
+        } else {
+            page = scrapeUtilsJsoup.connectAndGetPage(basicUrl);
+        }
+        return page;
     }
 
 
