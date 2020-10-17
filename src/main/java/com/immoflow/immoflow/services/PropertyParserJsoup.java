@@ -16,13 +16,12 @@ import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
-public class PropertyParserJsoup implements PropertyParser {
+public class PropertyParserJsoup {
 
     UserAgentParser<UserAgent> userAgentParser;
     ProxyParser<SimpleProxy>   proxyParser;
     ScrapeUtilsJsoup scrapeUtilsJsoup;
 
-    @Override
     public PropertyData scrapeData(String basicUrl) {
         PropertyData propertyData = new PropertyData();
 
