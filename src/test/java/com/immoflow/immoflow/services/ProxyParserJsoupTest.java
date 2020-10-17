@@ -28,9 +28,12 @@ class ProxyParserJsoupTest {
     @Test
     void shouldScrapeProxiesWithoutProxyProxyLimit() {
         ReflectionTestUtils.setField(ProxyParserJsoup.class, "workingProxyLimit", 999);
+        ReflectionTestUtils.setField(ProxyParserJsoup.class, "timeOutForAllRunningThreadsInSec", 60);
+        ReflectionTestUtils.setField(ProxyParserJsoup.class, "maxActiveThreadNumber", 20);
         ProxyParserJsoup  proxyParserJsoup = new ProxyParserJsoup();
         List<SimpleProxy> simpleProxies   = proxyParserJsoup.scrapeProxies();
         Assertions.assertTrue(simpleProxies.size()>1);
     }
+
 
 }

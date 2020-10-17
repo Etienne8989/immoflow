@@ -69,15 +69,16 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
     List<SimpleProxy> asyncProxyTest(ArrayList<String> proxyList) {
         log.info("the proxy testing is getting started...\n\n");
 
-        log.info("the set proxy limit is {} \n\n", workingProxyLimit);
+        log.info("the proxy limit is {}", workingProxyLimit);
+        log.info("the time out for all threads is is {}", timeOutForAllRunningThreadsInSec);
+        log.info("the max active thread number is {} \n\n", maxActiveThreadNumber);
 
-        List<SimpleProxy> workingProxiesList = new ArrayList<SimpleProxy>();
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+        List<SimpleProxy>  workingProxiesList = new ArrayList<SimpleProxy>();
+        ThreadPoolExecutor executor           = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxActiveThreadNumber);
 
         for (String proxy : proxyList) {
             executor.submit(() -> {
                 testProxy(proxy, workingProxiesList);
-                log.info("current number of active threads: {}", executor.getActiveCount());
 
                 if (workingProxiesList.size() >= workingProxyLimit) {
                     log.info("The size of workingProxyLimit ({}) is reached. The current number of available proxies is {}", workingProxyLimit, workingProxiesList.size());
@@ -87,16 +88,22 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
             });
         }
 
-        try {
-            if (!executor.awaitTermination(timeOutForAllRunningThreadsInSec, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
-                log.info("all proxies are processed. The current number of available proxies is {}", workingProxiesList.size());
-            }
-        } catch (InterruptedException e) {
-            log.debug("the current test thread has been interrupted", e);
+        while (executor.getActiveCount() > 0) {
+            log.info("current number of active threads: {}", executor.getActiveCount());
+            sleep(1000);
         }
 
+        log.info(" +++ all proxies are processed. the current number of available proxies is {} +++", workingProxiesList.size());
+
         return workingProxiesList;
+    }
+
+    private void sleep(int millisec) {
+        try {
+            Thread.sleep(millisec);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void testProxy(String proxyString, List<SimpleProxy> workingProxiesList) {
