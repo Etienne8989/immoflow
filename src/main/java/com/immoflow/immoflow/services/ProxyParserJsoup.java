@@ -123,7 +123,7 @@ public class ProxyParserJsoup {
         return page;
     }
 
-    //proxies aren't working
+    //proxies aren't working (try again later)
     private List<String> scrapeProxiesFromProxiesDaily() {
         log.info("connect to " + URL_PROXIES_DAILY);
         Document     page      = connectAndGetPage(URL_PROXIES_DAILY);
