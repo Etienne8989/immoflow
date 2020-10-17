@@ -3,6 +3,7 @@ package com.immoflow.immoflow.services;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.immoflow.immoflow.resource.SimpleProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-public class ProxyParserJsoup {
+public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
 
     //todo variablen als properties setzen
     private static final String  USER_AGENT_GOOGLE = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
@@ -29,10 +30,11 @@ public class ProxyParserJsoup {
     private static final Integer JSOUP_TIMEOUT     = 7000;
 
 
-    public void scrapeProxied() throws IOException, InterruptedException {
+    public List<SimpleProxy> scrapeProxies() {
         ArrayList<String> proxyList        = screapeProxiesFromSllProxies();
-        List<String>      workingProxyList = testProxyConnections(proxyList);
+        List<SimpleProxy>      workingProxyList = testProxyConnections(proxyList);
         log.info("\n\n the following proxies are working: \n\n" + workingProxyList);
+        return workingProxyList;
     }
 
     private ArrayList<String> screapeProxiesFromSllProxies() {
@@ -51,13 +53,13 @@ public class ProxyParserJsoup {
         return proxyList;
     }
 
-    private List<String> testProxyConnections(ArrayList<String> proxyList) throws InterruptedException, IOException {
+    private List<SimpleProxy> testProxyConnections(ArrayList<String> proxyList) {
         log.info("the proxy testing is getting started...\n\n");
-        List<String> workingProxiesList = new ArrayList<>();
+        List<SimpleProxy> workingProxiesList = new ArrayList<>();
         for (String ip : proxyList) {
             String[] ipAndPort = ip.split(":");
             log.info("test connection with host " + ipAndPort[0] + " and port " + ipAndPort[1]);
-            String workingProxy = getIpWithJsoup(ipAndPort[0], ipAndPort[1]);
+            SimpleProxy workingProxy = getIpWithJsoup(ipAndPort[0], ipAndPort[1]);
             if (workingProxy != null) {
                 log.info("+++ the proxy is working and will be added to the proxy list +++\n");
                 workingProxiesList.add(workingProxy);
@@ -68,15 +70,15 @@ public class ProxyParserJsoup {
         return workingProxiesList;
     }
 
-    private String getIpWithJsoup(String proxyHost, String proxyPort) {
+    private SimpleProxy getIpWithJsoup(String proxyHost, String proxyPort) {
         Document document     = connectAndGetPage(URL_SHOW_MY_IP, proxyHost, proxyPort);
-        String   workingProxy = null;
+        SimpleProxy simpleProxy = null;
         if (document != null) {
             Elements ip = document.select(".iptab td:nth-child(2)");
             log.info("the current ip is: " + ip.text());
-            workingProxy = proxyHost + ":" + proxyPort;
+            simpleProxy = new SimpleProxy(proxyHost, proxyPort);
         }
-        return workingProxy;
+        return simpleProxy;
     }
 
     private Document connectAndGetPage(String url, String proxyHost, String proxyPort) {

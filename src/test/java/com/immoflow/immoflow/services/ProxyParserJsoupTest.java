@@ -10,7 +10,7 @@ class ProxyParserJsoupTest {
     @Test
     void scrapeProxied() throws IOException, InterruptedException {
         ProxyParserJsoup proxyParserJsoup = new ProxyParserJsoup();
-        proxyParserJsoup.scrapeProxied();
+        proxyParserJsoup.scrapeProxies();
     }
 
 }

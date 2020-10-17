@@ -1,8 +1,7 @@
 package com.immoflow.immoflow.services;
 
-import com.immoflow.immoflow.resource.Keller;
-import com.immoflow.immoflow.resource.ParkingSpace;
-import com.immoflow.immoflow.resource.PropertyData;
+import com.immoflow.immoflow.resource.*;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,14 +11,20 @@ import org.springframework.boot.CommandLineRunner;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.Proxy;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@AllArgsConstructor
 public class PropertyParserJsoup implements PropertyParser {
 
-    private static final String                  USER_AGENT              = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+    private static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+    UserAgentParser<UserAgentFromFile> userAgentParser;
+    ProxyParser<SimpleProxy>           proxyParser;
+
 
     @Override
     public PropertyData scrapeData(String basicUrl) {
@@ -171,11 +176,29 @@ public class PropertyParserJsoup implements PropertyParser {
         Document page = null;
         try {
             if (basicUrl.startsWith("http")) {
-                //connect to URL
-                page = Jsoup.connect(
-                        basicUrl)
-                        .userAgent(USER_AGENT)
-                        .get();
+
+                List<UserAgentFromFile> userAgentList = userAgentParser.getUserAgentList();
+                Collections.shuffle(userAgentList);
+                List<SimpleProxy> workingProxies = proxyParser.scrapeProxies();
+                Collections.shuffle(workingProxies);
+                SimpleProxy simpleProxy;
+                if (!workingProxies.isEmpty()) {
+                    simpleProxy = workingProxies.get(0);
+                    log.info("the immo scraper will connect with proxy {}:{}", simpleProxy.getHost(), simpleProxy.getPort());
+                    //connect to URL
+                    page = Jsoup.connect(basicUrl)
+                            .proxy(simpleProxy.getHost(), Integer.parseInt(simpleProxy.getPort()))
+                            .userAgent(userAgentList.get(0).getUserAgent())
+                            .get();
+                }else{
+                    log.info("the immo scraper will connect without proxy");
+                    //connect to URL
+                    page = Jsoup.connect(basicUrl)
+                            .userAgent(userAgentList.get(0).getUserAgent())
+                            .get();
+                }
+
+
             } else {
                 //connect to file
                 File html = new File(basicUrl);
