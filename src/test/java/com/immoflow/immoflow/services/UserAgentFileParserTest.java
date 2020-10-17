@@ -12,9 +12,8 @@ class UserAgentFileParserTest {
     @Test
     void getUserAgentList() {
         UserAgentParser<UserAgentFromFile> userAgentParser = new UserAgentFileParser();
-
         List<UserAgentFromFile> userAgentList = userAgentParser.getUserAgentList();
-        System.out.println(userAgentList);
+        assertNotNull(userAgentList.get(0));
     }
 
 }
