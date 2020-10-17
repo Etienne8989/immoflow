@@ -1,6 +1,6 @@
 package com.immoflow.immoflow.services;
 
-import com.immoflow.immoflow.resource.UserAgentFromFile;
+import com.immoflow.immoflow.resource.UserAgent;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,8 +11,8 @@ class UserAgentFileParserTest {
 
     @Test
     void getUserAgentList() {
-        UserAgentParser<UserAgentFromFile> userAgentParser = new UserAgentFileParser();
-        List<UserAgentFromFile> userAgentList = userAgentParser.getUserAgentList();
+        UserAgentParser<UserAgent> userAgentParser = new UserAgentFileParser();
+        List<UserAgent>            userAgentList   = userAgentParser.getUserAgentList();
         assertNotNull(userAgentList.get(0));
     }
 

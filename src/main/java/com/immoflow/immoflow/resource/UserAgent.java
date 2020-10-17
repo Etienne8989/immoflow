@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserAgentFromFile {
+public class UserAgent {
 
     private String userAgent;
 

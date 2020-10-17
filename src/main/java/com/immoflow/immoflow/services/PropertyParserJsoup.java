@@ -3,34 +3,30 @@ package com.immoflow.immoflow.services;
 import com.immoflow.immoflow.resource.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.boot.CommandLineRunner;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.Proxy;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+/*NOTE: Jsoup is not able to execute java script. therefore the jsoup property parser is currently not working*/
 
 @Slf4j
 @AllArgsConstructor
 public class PropertyParserJsoup implements PropertyParser {
 
-    private static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
-    UserAgentParser<UserAgentFromFile> userAgentParser;
-    ProxyParser<SimpleProxy>           proxyParser;
-
+    UserAgentParser<UserAgent> userAgentParser;
+    ProxyParser<SimpleProxy>   proxyParser;
+    ScrapeUtilsJsoup scrapeUtilsJsoup = new ScrapeUtilsJsoup(userAgentParser, proxyParser);
 
     @Override
     public PropertyData scrapeData(String basicUrl) {
         PropertyData propertyData = new PropertyData();
 
-        Document page = connectAndGetPage(basicUrl);
+        Document page =scrapeUtilsJsoup.getPageWithProxyAndUserAgent(basicUrl);
+
         if (page != null) {
             extractAndSetTitle(propertyData, page);
 
@@ -49,6 +45,8 @@ public class PropertyParserJsoup implements PropertyParser {
         }
         return propertyData;
     }
+
+
 
     private void extractAndSetAdditionalData(PropertyData propertyData, Document page) {
         Element propertyType = page.selectFirst(".is24qa-typ");
@@ -172,44 +170,9 @@ public class PropertyParserJsoup implements PropertyParser {
         }
     }
 
-    Document connectAndGetPage(String basicUrl) {
-        Document page = null;
-        try {
-            if (basicUrl.startsWith("http")) {
-
-                List<UserAgentFromFile> userAgentList = userAgentParser.getUserAgentList();
-                Collections.shuffle(userAgentList);
-                List<SimpleProxy> workingProxies = proxyParser.scrapeProxies();
-                Collections.shuffle(workingProxies);
-                SimpleProxy simpleProxy;
-                if (!workingProxies.isEmpty()) {
-                    simpleProxy = workingProxies.get(0);
-                    log.info("the immo scraper will connect with proxy {}:{}", simpleProxy.getHost(), simpleProxy.getPort());
-                    //connect to URL
-                    page = Jsoup.connect(basicUrl)
-                            .proxy(simpleProxy.getHost(), Integer.parseInt(simpleProxy.getPort()))
-                            .userAgent(userAgentList.get(0).getUserAgent())
-                            .get();
-                }else{
-                    log.info("the immo scraper will connect without proxy");
-                    //connect to URL
-                    page = Jsoup.connect(basicUrl)
-                            .userAgent(userAgentList.get(0).getUserAgent())
-                            .get();
-                }
-
-
-            } else {
-                //connect to file
-                File html = new File(basicUrl);
-                page = Jsoup.parse(html, null);
-            }
-
-        } catch (IOException ex) {
-            log.debug("could not parse given website ", ex);
-        }
-        return page;
+    public PropertyParserJsoup(UserAgentParser<UserAgent> userAgentParser, ProxyParser<SimpleProxy> proxyParser) {
+        this.userAgentParser = userAgentParser;
+        this.proxyParser = proxyParser;
     }
-
 
 }
