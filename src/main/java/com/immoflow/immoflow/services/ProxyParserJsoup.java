@@ -37,8 +37,6 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
     //set a specific number or no-limit for all proxies that you can get
     @Value("${scraper.proxies.workingProxyLimit:9999}")
     private static int workingProxyLimit;
-    @Value("${scraper.proxies.timeOutForAllRunningThreadsInSec:60}")
-    private static int timeOutForAllRunningThreadsInSec;
     @Value("${scraper.proxies.maxActiveThreadNumber:5}")
     private static int maxActiveThreadNumber;
 
@@ -70,7 +68,6 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
         log.info("the proxy testing is getting started...\n\n");
 
         log.info("the proxy limit is {}", workingProxyLimit);
-        log.info("the time out for all threads is is {}", timeOutForAllRunningThreadsInSec);
         log.info("the max active thread number is {} \n\n", maxActiveThreadNumber);
 
         List<SimpleProxy>  workingProxiesList = new ArrayList<SimpleProxy>();
