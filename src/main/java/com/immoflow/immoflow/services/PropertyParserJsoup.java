@@ -28,7 +28,11 @@ public class PropertyParserJsoup implements PropertyParser {
 
         List<UserAgent> userAgentList = userAgentParser.getUserAgentList();
         Collections.shuffle(userAgentList);
-        List<SimpleProxy> workingProxies = proxyParser.scrapeProxies();
+
+        ProxyContext proxyContext = new ProxyContext();
+        proxyContext.setSslProxies(true);
+
+        List<SimpleProxy> workingProxies = proxyParser.scrapeProxies(proxyContext);
         Collections.shuffle(workingProxies);
 
         Document page =getPageByContext(basicUrl,userAgentList,workingProxies);

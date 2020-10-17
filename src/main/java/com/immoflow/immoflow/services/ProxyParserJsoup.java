@@ -3,6 +3,7 @@ package com.immoflow.immoflow.services;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.immoflow.immoflow.resource.ProxyContext;
 import com.immoflow.immoflow.resource.SimpleProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -41,9 +42,17 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
     private static int maxActiveThreadNumber;
 
 
-    public List<SimpleProxy> scrapeProxies() {
-        ArrayList<String> proxyList        = scrapeProxiesFromSllProxies();
-        List<SimpleProxy> workingProxyList = asyncProxyTest(proxyList);
+    public List<SimpleProxy> scrapeProxies(ProxyContext proxyContext) {
+        List<SimpleProxy> workingProxyList = new ArrayList<>();
+        if (proxyContext.isSslProxies()) {
+            List<String> proxyList = scrapeProxiesFromSllProxies();
+            workingProxyList.addAll(asyncProxyTest(proxyList));
+        }
+        if (proxyContext.isProxiesDaily()) {
+            List<String> proxyList = scrapeProxiesFromProxiesDaily();
+            workingProxyList.addAll(asyncProxyTest(proxyList));
+        }
+
         log.info("\n\n the following proxies are working: \n\n" + workingProxyList);
         return workingProxyList;
     }
@@ -64,9 +73,8 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
         return proxyList;
     }
 
-    List<SimpleProxy> asyncProxyTest(ArrayList<String> proxyList) {
+    List<SimpleProxy> asyncProxyTest(List<String> proxyList) {
         log.info("the proxy testing is getting started...\n\n");
-
         log.info("the proxy limit is {}", workingProxyLimit);
         log.info("the max active thread number is {} \n\n", maxActiveThreadNumber);
 
@@ -76,7 +84,6 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
         for (String proxy : proxyList) {
             executor.submit(() -> {
                 testProxy(proxy, workingProxiesList);
-
                 if (workingProxiesList.size() >= workingProxyLimit) {
                     log.info("The size of workingProxyLimit ({}) is reached. The current number of available proxies is {}", workingProxyLimit, workingProxiesList.size());
                     log.info("running threads will be terminated");
@@ -177,8 +184,7 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
         String       proxies   = page.selectFirst(".freeProxyStyle:nth-child(7)").text();
         List<String> proxyList = (List<String>) Arrays.asList(proxies.split("\\s"));
         proxyList.forEach(a -> a.replaceAll("\\s", ""));
-        Collections.shuffle(proxyList);
-        log.info("the following proxies has been scraped: ");
+        log.info("the following proxies have been scraped: ");
         log.info(proxyList.toString());
         return proxyList;
     }
