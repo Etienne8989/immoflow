@@ -55,6 +55,28 @@ public class PropertyParserJsoup {
         return propertyData;
     }
 
+    public PropertyData scrapeData(Document page) {
+        PropertyData propertyData = new PropertyData();
+
+        if (page != null) {
+            extractAndSetTitle(propertyData, page);
+
+            Element      zipCodeAndCityAndDistrict     = page.selectFirst(".zip-region-and-country");
+            List<String> zipCodeAndCityAndDistrictList = Arrays.asList(zipCodeAndCityAndDistrict.text().split("\\s"));
+            extractAndSetZipCode(propertyData, zipCodeAndCityAndDistrictList);
+            extractAndSetCity(propertyData, zipCodeAndCityAndDistrictList);
+            extractAndSetDistrict(propertyData, zipCodeAndCityAndDistrictList);
+
+            Element street = zipCodeAndCityAndDistrict.previousElementSibling();
+            extractAndSetStreet(propertyData, street);
+
+            extraxtAndSetCostData(propertyData, page);
+
+            extractAndSetAdditionalData(propertyData, page);
+        }
+        return propertyData;
+    }
+
     private Document getPageByContext(String basicUrl, List<UserAgent> userAgentList, List<SimpleProxy> workingProxies) {
         Document page = null;
         if (!workingProxies.isEmpty() && !userAgentList.isEmpty()) {
@@ -75,23 +97,23 @@ public class PropertyParserJsoup {
             propertyData.setPropertyType(propertyType.text());
         }
         Element propertyFloor = page.selectFirst(".is24qa-etage");
-        if (propertyType != null) {
+        if (propertyFloor != null) {
             propertyData.setFloor(propertyFloor.text());
         }
         Element propertyAreaInM2 = page.selectFirst(".is24qa-wohnflaeche-ca");
-        if (propertyType != null) {
+        if (propertyAreaInM2 != null) {
             propertyData.setAreaInM2(propertyAreaInM2.text());
         }
         Element propertyMoveInDate = page.selectFirst(".is24qa-bezugsfrei-ab ");
-        if (propertyType != null) {
+        if (propertyMoveInDate != null) {
             propertyData.setMoveInDate(propertyMoveInDate.text());
         }
         Element propertyRoomsCount = page.selectFirst(".is24qa-zimmer");
-        if (propertyType != null) {
+        if (propertyRoomsCount != null) {
             propertyData.setRooms(propertyRoomsCount.text());
         }
         Element propertyBathRoomsCount = page.selectFirst(".is24qa-badezimmer");
-        if (propertyType != null) {
+        if (propertyBathRoomsCount != null) {
             propertyData.setRoomsBath(propertyBathRoomsCount.text());
         }
         Element propertyParkingSpace = page.selectFirst(".is24qa-garage-stellplatz-label");
@@ -99,11 +121,11 @@ public class PropertyParserJsoup {
             propertyData.setParkingSpace(ParkingSpace.AVAILABLE);
         }
         Element petsAllowed = page.selectFirst(".is24qa-haustiere");
-        if (propertyType != null) {
+        if (petsAllowed != null) {
             propertyData.setPetsAllowed(petsAllowed.text());
         }
         Element propertyConstructionYear = page.selectFirst(".is24qa-baujahr");
-        if (propertyType != null) {
+        if (propertyConstructionYear != null) {
             propertyData.setConstructionYear(propertyConstructionYear.text());
         }
         Element propertyLastRenovation = page.selectFirst(".is24qa-modernisierung-sanierung");
@@ -189,6 +211,9 @@ public class PropertyParserJsoup {
         if (zipCodeAndCityAndDistrictList.size() >= 1) {
             propertyData.setZipCode(zipCodeAndCityAndDistrictList.get(0));
         }
+    }
+
+    public PropertyParserJsoup() {
     }
 
     public PropertyParserJsoup(UserAgentParser<UserAgent> userAgentParser, ProxyParser<SimpleProxy> proxyParser) {

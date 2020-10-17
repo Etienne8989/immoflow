@@ -1,5 +1,6 @@
 package com.immoflow.immoflow.services;
 
+import com.immoflow.immoflow.resource.ProxyContext;
 import com.immoflow.immoflow.resource.SimpleProxy;
 import com.immoflow.immoflow.resource.UserAgent;
 import lombok.extern.slf4j.Slf4j;
@@ -93,6 +94,12 @@ public class ScrapeUtilsJsoup {
             log.debug("could not parse given website ", ex);
         }
         return page;
+    }
+
+    public static ProxyContext buildProxyContext(){
+        ProxyContext proxyContext = new ProxyContext();
+        proxyContext.setSslProxies(true);
+        return proxyContext;
     }
 
 

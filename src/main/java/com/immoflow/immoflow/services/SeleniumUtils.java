@@ -17,10 +17,10 @@ public class SeleniumUtils {
         if (proxyIp != null) {
             options.addArguments("--proxy-server=" + proxyIp);
         }
-        //        options.addArguments("--disable-extensions");
+                options.addArguments("--disable-extensions");
         //        options.addArguments("--profile-directory=Default");
-        //        options.addArguments("--incognito");
-        //        options.addArguments("--disable-plugins-discovery");
+                options.addArguments("--incognito");
+                options.addArguments("--disable-plugins-discovery");
         //        options.addArguments("headless");
         options.addArguments("--start-maximized");
 

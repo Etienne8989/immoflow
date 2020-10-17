@@ -2,9 +2,20 @@ package com.immoflow.immoflow.services;
 
 import com.immoflow.immoflow.TestUtils;
 import com.immoflow.immoflow.resource.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,49 +41,30 @@ class PropertyParserSeleniumTest {
     public static final String URL = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
 
     @Test
-    void scrapeData() {
+    void scrapeData() throws IOException {
 
-        ProxyParserJsoup proxyParserJsoup = new ProxyParserJsoup();
-        TestUtils.setProxyProperties();
-        List<SimpleProxy>   workingProxies      = proxyParserJsoup.scrapeProxies(TestUtils.buildProxyContext());
-        UserAgentFileParser userAgentFileParser = new UserAgentFileParser();
-        List<UserAgent>        userAgentList          = userAgentFileParser.getUserAgentList();
-        String proxy = workingProxies.get(0).getHost() + ":" + workingProxies.get(0).getPort();
-//        PropertyParserSelenium propertyParserSelenium = new PropertyParserSelenium();
-        WebDriver              webDriver              = SeleniumUtils.initWebDriver(proxy, userAgentList.get(0).getUserAgent());
-        webDriver.get("https://www.immobilienscout24.de/");
+//        ProxyParserJsoup proxyParserJsoup = new ProxyParserJsoup();
+//        TestUtils.setProxyProperties();
+//        List<SimpleProxy>   workingProxies      = proxyParserJsoup.scrapeProxies(TestUtils.buildProxyContext());
+//        Collections.shuffle(workingProxies);
+//        UserAgentFileParser userAgentFileParser = new UserAgentFileParser();
+//        List<UserAgent>        userAgentList          = userAgentFileParser.getUserAgentList();
+//        Collections.shuffle(userAgentList);
+//        String proxy = workingProxies.get(0).getHost() + ":" + workingProxies.get(0).getPort();
+//                PropertyParserSelenium propertyParserSelenium = new PropertyParserSelenium();
+//        WebDriver          webDriver = SeleniumUtils.initWebDriver(proxy, userAgentList.get(0).getUserAgent());
+//        JavascriptExecutor js        = (JavascriptExecutor)webDriver;
+//        webDriver.get("https://www.immobilienscout24.de/expose/122659785?referrer=RESULT_LIST_LISTING&navigationServiceUrl=%2FSuche%2Fcontroller%2FexposeNavigation%2Fnavigate.go%3FsearchUrl%3D%2FSuche%2Fde%2Fnordrhein-westfalen%2Fduesseldorf%2Fwohnung-mieten%3FenteredFrom%253Done_step_search%26exposeId%3D122659785&navigationHasPrev=true&navigationHasNext=true&navigationBarType=RESULT_LIST&searchId=6d92fda4-44c2-38ad-8335-56327fb5862d&searchType=district#/");
+//        String body = (String) js.executeScript("return document.documentElement.outerHTML;");
+//        System.out.println(body);
 
 
-//        PropertyData           propertyData           = propertyParserSelenium.scrapeData(URL,null,null);
+        String content = Files.readString(Path.of("/Users/etho/projects-programming/immoflow/src/main/resources/scrapedata/immflow-scrape-page/test-page-html-string.txt"), StandardCharsets.UTF_8);
+        Document page = Jsoup.parse(content);
+        PropertyParserJsoup propertyParserJsoup = new PropertyParserJsoup();
+        PropertyData propertyData = propertyParserJsoup.scrapeData(page);
+        Assertions.assertEquals(propertyData.getCity(), "Düsseldorf");
 
-//        //environment data
-//        assertEquals("**Nähe Seestern** Helle 3 Zi.-Whg. mit Einbauküche und Balkon, 40547 Düsseldorf-Lörick", propertyData.getTitle());
-//        assertEquals("Deutschland", propertyData.getCountry()); //enum
-//        assertEquals("Düsseldorf", propertyData.getCity());
-//        assertEquals("40547", propertyData.getZipCode());
-//        assertEquals("Lörick", propertyData.getDistrict());
-//        assertEquals("Wickrather Str. 35", propertyData.getStreet());
-//        //costs
-//        assertEquals("995 €", propertyData.getCostsCold());
-//        assertEquals("+ 350 €", propertyData.getCostsAdditional());
-//        //        assertEquals("in Nebenkosten enthalten",propertyData.getCostsHeating());
-//        assertEquals("1.345 €", propertyData.getCostsTotal());
-//        assertEquals("70 €", propertyData.getCostsParkingSpace());
-//        assertEquals("3195", propertyData.getKaution());
-//        //additional data
-//        assertEquals("Etagenwohnung", propertyData.getPropertyType());
-//        assertEquals("5 von 8", propertyData.getFloor());
-//        assertEquals("87 m²", propertyData.getAreaInM2());
-//        assertEquals("Ab sofort bezugsfrei", propertyData.getMoveInDate());
-//        assertEquals("3", propertyData.getRooms());
-//        assertEquals("1", propertyData.getRoomsBath());
-//        assertEquals(ParkingSpace.AVAILABLE, propertyData.getParkingSpace()); //enum
-//        assertEquals("Nach Vereinbarung", propertyData.getPetsAllowed());
-//        assertEquals("1973", propertyData.getConstructionYear());
-//        assertEquals("zuletzt 2020", propertyData.getLastRenovation());
-//        //tags
-//        assertEquals(Keller.AVAILABLE, propertyData.getKeller()); //enum
-//        assertEquals("C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html", propertyData.getHttpLink());
     }
 
 }
