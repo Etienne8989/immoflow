@@ -6,6 +6,7 @@ import com.immoflow.immoflow.resource.*;
 import com.immoflow.immoflow.useragent.UserAgent;
 import com.immoflow.immoflow.useragent.UserAgentFileParser;
 import org.jsoup.nodes.Document;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,6 +19,7 @@ class PropertyParserJsoupTest {
     private static final String URL  = "https://www.immobilienscout24.de/";
 
     @Test
+    @Disabled
     void getPropertyDataByFileHappyFlow() {
 
         PropertyParserJsoup propertyParser = new PropertyParserJsoup(new UserAgentFileParser(), new ProxyParserJsoup());

@@ -35,10 +35,11 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
 
     //restricts the number of proxies which is used for scraping
     //set a specific number or no-limit for all proxies that you can get
-    @Value("${scraper.proxies.workingProxyLimit:9999}")
-    private static int workingProxyLimit;
-    @Value("${scraper.proxies.maxActiveThreadNumber:5}")
-    private static int maxActiveThreadNumber;
+    //todo in static propeerties class packen
+//    @Value("${scraper.proxies.workingProxyLimit:9999}")
+    private static int workingProxyLimit = 20;
+//    @Value("${scraper.proxies.maxActiveThreadNumber:5}")
+    private static int maxActiveThreadNumber = 50;
 
 
     public List<SimpleProxy> scrapeProxies(ProxyContext proxyContext) {

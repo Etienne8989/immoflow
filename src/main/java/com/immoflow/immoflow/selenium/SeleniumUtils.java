@@ -32,19 +32,21 @@ public class SeleniumUtils {
         String message = "The following settings for the selenium web driver have been set: \n";
 
         if (userAgent != null) {
-            message = message + "--user-agent\n";
+            message = message + "--user-agent with user agent \n" + userAgent;
             options.addArguments("--user-agent=" + userAgent);
         }
         if (proxyIp != null) {
-            message = message + "--proxy-server\n";
+            message = message + "--proxy-server with proxy \n" + proxyIp;
             options.addArguments("--proxy-server=" + proxyIp);
         }
         if (seleniumSettings.isExtensionsDisabled()) {
             message = message + "--disable-extensions\n";
             options.addArguments("--disable-extensions");
         }
-        //        options.addArguments("--profile-directory=Default");
-        if (seleniumSettings.isIncognitoMode()) {log.info("the property --user-agent has been set");
+
+                options.addArguments("--profile-directory=Default");
+
+        if (seleniumSettings.isIncognitoMode()) {
             message = message + "--incognito\n";
             options.addArguments("--incognito");
         }

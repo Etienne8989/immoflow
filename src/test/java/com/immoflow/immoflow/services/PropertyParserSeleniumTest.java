@@ -5,6 +5,7 @@ import com.immoflow.immoflow.resource.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -41,6 +42,7 @@ class PropertyParserSeleniumTest {
     public static final String URL = "C:\\Users\\ehoven\\Documents\\Projekte\\immoflow\\src\\main\\resources\\scrapedata\\immflow-scrape-page\\testpage.html";
 
     @Test
+    @Disabled
     void scrapeData() throws IOException {
 
 //        ProxyParserJsoup proxyParserJsoup = new ProxyParserJsoup();
