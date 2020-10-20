@@ -1,6 +1,8 @@
 package com.immoflow.immoflow.services;
 
-import com.immoflow.immoflow.resource.UserAgent;
+import com.immoflow.immoflow.useragent.UserAgent;
+import com.immoflow.immoflow.useragent.UserAgentFileParser;
+import com.immoflow.immoflow.useragent.UserAgentParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

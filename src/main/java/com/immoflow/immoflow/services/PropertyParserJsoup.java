@@ -1,6 +1,9 @@
 package com.immoflow.immoflow.services;
 
+import com.immoflow.immoflow.proxies.ProxyParser;
 import com.immoflow.immoflow.resource.*;
+import com.immoflow.immoflow.useragent.UserAgent;
+import com.immoflow.immoflow.useragent.UserAgentParser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
@@ -12,15 +15,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-/*NOTE: Jsoup is not able to execute java script. therefore the jsoup property parser is currently not working*/
 
 @Slf4j
 @AllArgsConstructor
 public class PropertyParserJsoup {
 
+
+    /********************************************************************************************************************/
+
+    /****NOTE: Jsoup is not able to execute java script. therefore the jsoup property parser is currently not working****/
+
+    /********************************************************************************************************************/
     UserAgentParser<UserAgent> userAgentParser;
     ProxyParser<SimpleProxy>   proxyParser;
-    ScrapeUtilsJsoup scrapeUtilsJsoup;
+    ScrapeUtilsJsoup           scrapeUtilsJsoup;
 
     public PropertyData scrapeData(String basicUrl) {
         PropertyData propertyData = new PropertyData();

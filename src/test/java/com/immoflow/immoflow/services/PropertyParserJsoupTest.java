@@ -1,7 +1,10 @@
 package com.immoflow.immoflow.services;
 
 import com.immoflow.immoflow.TestUtils;
+import com.immoflow.immoflow.proxies.ProxyParserJsoup;
 import com.immoflow.immoflow.resource.*;
+import com.immoflow.immoflow.useragent.UserAgent;
+import com.immoflow.immoflow.useragent.UserAgentFileParser;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
 
@@ -55,11 +58,11 @@ class PropertyParserJsoupTest {
 
         ProxyParserJsoup proxyParserJsoup = new ProxyParserJsoup();
         TestUtils.setProxyProperties();
-        List<SimpleProxy> workingProxies   = proxyParserJsoup.scrapeProxies(TestUtils.buildProxyContext());
+        List<SimpleProxy>   workingProxies      = proxyParserJsoup.scrapeProxies(TestUtils.buildProxyContext());
         UserAgentFileParser userAgentFileParser = new UserAgentFileParser();
-        List<UserAgent> userAgentList = userAgentFileParser.getUserAgentList();
-        ScrapeUtilsJsoup scrapeUtilsJsoup = new ScrapeUtilsJsoup();
-        Document document = scrapeUtilsJsoup.connectAndGetPage(URL, workingProxies.get(0), userAgentList.get(0));
+        List<UserAgent>     userAgentList       = userAgentFileParser.getUserAgentList();
+        ScrapeUtilsJsoup    scrapeUtilsJsoup    = new ScrapeUtilsJsoup();
+        Document            document            = scrapeUtilsJsoup.connectAndGetPage(URL, workingProxies.get(0), userAgentList.get(0));
         System.out.println(document.body());
 //        PropertyParser propertyParser = new PropertyParserJsoup(new UserAgentFileParser(), new ProxyParserJsoup());
 //        PropertyData   propertyData   = propertyParser.scrapeData(URL);

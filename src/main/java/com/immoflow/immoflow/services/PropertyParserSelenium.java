@@ -1,15 +1,13 @@
 package com.immoflow.immoflow.services;
 
 import com.immoflow.immoflow.resource.PropertyData;
+import com.immoflow.immoflow.selenium.SeleniumUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class PropertyParserSelenium implements PropertyParser {
 

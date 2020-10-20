@@ -2,15 +2,13 @@ package com.immoflow.immoflow.services;
 
 import com.immoflow.immoflow.resource.ProxyContext;
 import com.immoflow.immoflow.resource.SimpleProxy;
-import com.immoflow.immoflow.resource.UserAgent;
+import com.immoflow.immoflow.useragent.UserAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j

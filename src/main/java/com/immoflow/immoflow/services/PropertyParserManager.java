@@ -1,8 +1,11 @@
 package com.immoflow.immoflow.services;
 
+import com.immoflow.immoflow.proxies.ProxyParserJsoup;
 import com.immoflow.immoflow.resource.PropertyData;
 import com.immoflow.immoflow.resource.SimpleProxy;
-import com.immoflow.immoflow.resource.UserAgent;
+import com.immoflow.immoflow.useragent.UserAgent;
+import com.immoflow.immoflow.selenium.SeleniumUtils;
+import com.immoflow.immoflow.useragent.UserAgentFileParser;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,6 +13,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Service
 public class PropertyParserManager {
 
     public List<PropertyData> getPropertyData() {
@@ -34,6 +39,13 @@ public class PropertyParserManager {
         String             proxy     = workingProxies.get(0).getHost() + ":" + workingProxies.get(0).getPort();
         WebDriver          webDriver = SeleniumUtils.initWebDriver(proxy, userAgentList.get(0).getUserAgent());
         JavascriptExecutor js        = (JavascriptExecutor) webDriver;
+
+        List<PropertyData> propertyDataList = startScraping(webDriver, js);
+
+        return propertyDataList;
+    }
+
+    private List<PropertyData> startScraping(WebDriver webDriver, JavascriptExecutor js) {
 
         int archivePageCount = parseAchivePageCount(webDriver, js);
 

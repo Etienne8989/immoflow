@@ -1,13 +1,12 @@
 package com.immoflow.immoflow.services;
 
 import com.immoflow.immoflow.TestUtils;
-import com.immoflow.immoflow.resource.ProxyContext;
+import com.immoflow.immoflow.proxies.ProxyParserJsoup;
 import com.immoflow.immoflow.resource.SimpleProxy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.IOException;
 import java.util.List;
 
 class ProxyParserJsoupTest {
@@ -23,7 +22,7 @@ class ProxyParserJsoupTest {
     void shouldUseProxyLimit() {
         ReflectionTestUtils.setField(ProxyParserJsoup.class, "workingProxyLimit", 3);
         ProxyParserJsoup  proxyParserJsoup = new ProxyParserJsoup();
-        List<SimpleProxy> simpleProxies   = proxyParserJsoup.scrapeProxies(TestUtils.buildProxyContext());
+        List<SimpleProxy> simpleProxies    = proxyParserJsoup.scrapeProxies(TestUtils.buildProxyContext());
         Assertions.assertEquals(3,simpleProxies.size());
     }
 
