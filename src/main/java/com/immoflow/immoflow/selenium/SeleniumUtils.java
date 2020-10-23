@@ -81,11 +81,12 @@ public class SeleniumUtils {
      * @param pixelSizePerScroll
      */
     public static void scrollDownTillElementIsVisible(JavascriptExecutor webDriver, WebElement element,  int pixelSizePerScroll) {
+        int pixelSize = 1000;
         while (!isVisibleInViewport(element)) {
-            log.info("The status of isVisibleInViewport is:" + isVisibleInViewport(element) + " The current pixel size is: " +pixelSizePerScroll);
+            log.info("The status of isVisibleInViewport is: " + isVisibleInViewport(element) + " The current pixel size is: " +pixelSize);
             sleepRandomTime(500, 1000);
-            webDriver.executeScript("window.scrollTo(0, " + pixelSizePerScroll + ")");
-            pixelSizePerScroll += pixelSizePerScroll;
+            webDriver.executeScript("window.scrollTo(0, " + pixelSize + ")");
+            pixelSize += pixelSizePerScroll;
         }
     }
 
@@ -112,7 +113,15 @@ public class SeleniumUtils {
                 , element);
     }
 
-    public static Document transformwebDriverContentToJsoupDocument(WebDriver driver) {
+    /**
+     * waits until the web site is completely loaded. Should be used after webdriver.get(url) so it can be assured that there is no conflict with the following steps.
+     * @param webDriver
+     */
+    public static void waitTillSiteIsFullyLoaded(WebDriver webDriver, int timeOutInSeconds) {
+        new WebDriverWait(webDriver, timeOutInSeconds).until(driver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+    }
+
+    public static Document transformWebDriverContentToJsoupDocument(WebDriver driver) {
         JavascriptExecutor js      = (JavascriptExecutor) driver;
         String             content = (String) js.executeScript("return document.documentElement.outerHTML;");
         Document           page    = Jsoup.parse(content);
