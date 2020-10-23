@@ -10,7 +10,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
 import java.net.URL;
@@ -36,9 +35,9 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
     //restricts the number of proxies which is used for scraping
     //set a specific number or no-limit for all proxies that you can get
     //todo in static propeerties class packen
-//    @Value("${scraper.proxies.workingProxyLimit:9999}")
-    private static int workingProxyLimit = 20;
-//    @Value("${scraper.proxies.maxActiveThreadNumber:5}")
+    //    @Value("${scraper.proxies.workingProxyLimit:9999}")
+    private static int workingProxyLimit     = 20;
+    //    @Value("${scraper.proxies.maxActiveThreadNumber:5}")
     private static int maxActiveThreadNumber = 50;
 
 
@@ -53,7 +52,8 @@ public class ProxyParserJsoup implements ProxyParser<SimpleProxy> {
             workingProxyList.addAll(asyncProxyTest(proxyList));
         }
 
-        log.info("\n\n the following proxies are working: \n\n" + workingProxyList);
+        log.info("the following proxies are working:");
+        workingProxyList.forEach(p -> log.info(p.getHost() + ":" + p.getPort()));
         return workingProxyList;
     }
 

@@ -17,6 +17,8 @@ import java.util.List;
 @ActiveProfiles("test")
 class PropertyParserManagerTest {
 
+    //ElementClickInterceptedException
+
     @Test
     void getPropertyData() {
 

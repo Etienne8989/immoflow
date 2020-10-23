@@ -10,15 +10,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+
+import static com.immoflow.immoflow.selenium.SeleniumUtils.*;
 
 @Slf4j
 @Service
@@ -29,7 +30,7 @@ public class PropertyParserManager {
         //init web-driver
         String proxy = workingProxies.get(0).getHost() + ":" + workingProxies.get(0).getPort();
         log.info("a fresh proxy will be set {}", proxy);
-        WebDriver          webDriver = SeleniumUtils.initWebDriver(proxy, userAgentList.get(0).getUserAgent());
+        WebDriver          webDriver = initWebDriver(proxy, userAgentList.get(0).getUserAgent());
         JavascriptExecutor js        = (JavascriptExecutor) webDriver;
 
         List<PropertyData> propertyDataList = null;
@@ -55,6 +56,7 @@ public class PropertyParserManager {
 
     }
 
+
     private List<PropertyData> startScraping(WebDriver webDriver, JavascriptExecutor js) {
 
         //                int archivePageCount = parseAchivePageCount(webDriver, js);
@@ -65,7 +67,55 @@ public class PropertyParserManager {
         ////        sleepRandomTime(9000, 15000);
 
 
-        scrapeFromStartPageTillCitySerch(webDriver,  "düsseldorf");
+        //start page
+        //        scrapeFromStartPageTillCitySerch(webDriver, "düsseldorf");
+
+        //archive page
+        webDriver.get("https://www.immobilienscout24.de/Suche/de/nordrhein-westfalen/duesseldorf/wohnung-mieten?enteredFrom=one_step_search");
+        waitUntilElementIsVisible(webDriver, By.xpath("//*[@id=\"is24-de\"]/div[1]/div/div[1]/div/div/header/div/div[1]/a/img[2]"));
+        sleepRandomTime(7000, 11000);
+        List<WebElement> propertyCards = webDriver.findElements(By.className("result-list__listing"));
+        List<WebElement> propertyCardTitlesWithoutCommercials = propertyCards
+                .stream()
+                .filter(p -> !p.getAttribute("class").contains("result-list__listing--xl"))
+                .map(p -> p.findElement(By.className("result-list-entry__brand-title")))
+                .collect(Collectors.toList());
+        propertyCardTitlesWithoutCommercials.forEach(p -> log.info(p.toString()));
+        List<PropertyData> propertyDataList = new ArrayList<>();
+
+        propertyCardTitlesWithoutCommercials.forEach(p -> {
+
+            sleepRandomTime(11000, 15000);
+
+            int pixelSizeToScroll = 1000;
+            while (!isVisibleInViewport(p)) {
+                log.info("The status of isVisibleInViewport is:" + isVisibleInViewport(p) + " The current pixel size is: " +pixelSizeToScroll);
+                sleepRandomTime(500, 1000);
+                ((JavascriptExecutor) webDriver).executeScript("window.scrollTo(0, " + pixelSizeToScroll + ")");
+                pixelSizeToScroll += 1000;
+            }
+
+            sleepRandomTime(11000, 15000);
+            log.info("the button from the property card will be clicked");
+            p.click();
+            sleepRandomTime(8000, 10000);
+
+            //wait until immoscout banner appears
+            waitUntilElementIsVisible(webDriver, By.xpath("//*[@id=\"is24-de\"]/div[2]/div[2]/div/header/div/div[1]/a/img[2]"));
+            sleepRandomTime(5000, 7000);
+            Document            page                = transformwebDriverContentToJsoupDocument(webDriver);
+            PropertyParserJsoup propertyParserJsoup = new PropertyParserJsoup();
+            PropertyData        propertyData        = propertyParserJsoup.scrapeData(page);
+            log.info("the property data with the following title has been scraped : " + propertyData.getTitle());
+            propertyDataList.add(propertyData);
+            sleepRandomTime(3000, 6000);
+            webDriver.navigate().back();
+            sleepRandomTime(7000, 1000);
+        });
+        propertyDataList.forEach(p -> log.info(p.getTitle()));
+
+
+        //property page
 
 
         //                        log.info("the current state of page count from immoscout is: " + archivePageCount);
@@ -155,43 +205,35 @@ public class PropertyParserManager {
         }
     }
 
-    private void waitUntilElementIsVisible(WebDriver webDriver, By visibleElement) {
-        WebDriverWait wait = new WebDriverWait(webDriver, 100);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(visibleElement));
-        sleepRandomTime(3000, 5000);
-    }
 
-    private void waitUntilElementIsVisible(WebDriver webDriver, By visibleElement, int timeOutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(webDriver, timeOutInSeconds);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(visibleElement));
-        sleepRandomTime(3000, 5000);
-    }
 
-    private int parseAchivePageCount(WebDriver webDriver, JavascriptExecutor js) {
+
+
+    private int parseAchivePageCount(WebDriver webDriver) {
         sleepRandomTime(4, 7);
         String firstArchivePage = "https://www.immobilienscout24.de/Suche/de/nordrhein-westfalen/duesseldorf/wohnung-mieten?pagenumber=1";
         webDriver.get(firstArchivePage);
-        Document page                 = transformwebDriverContentToJsoupDocument(js);
+        Document page                 = transformwebDriverContentToJsoupDocument(webDriver);
         Element  archivePageAriaLabel = page.getElementsByAttributeValue("aria-label", "Seitenauswahl").first();
         int      archivePageCount     = archivePageAriaLabel.childrenSize();
         return archivePageCount;
     }
 
-    private PropertyData parseSinglePage(WebDriver webDriver, JavascriptExecutor js, String singlePageUrl) {
+    private PropertyData parseSinglePage(WebDriver webDriver, String singlePageUrl) {
         sleepRandomTime(2, 6);
         webDriver.get("https://www.immobilienscout24.de" + singlePageUrl);
-        Document            page                = transformwebDriverContentToJsoupDocument(js);
+        Document            page                = transformwebDriverContentToJsoupDocument(webDriver);
         PropertyParserJsoup propertyParserJsoup = new PropertyParserJsoup();
         return propertyParserJsoup.scrapeData(page);
     }
 
 
-    private List<String> parseSinglePageLinks(WebDriver webDriver, JavascriptExecutor js, int pageNumber) {
+    private List<String> parseSinglePageLinks(WebDriver webDriver, int pageNumber) {
 
         sleepRandomTime(4, 7);
         String currentArchivePage = "https://www.immobilienscout24.de/Suche/de/nordrhein-westfalen/duesseldorf/wohnung-mieten?pagenumber=" + pageNumber;
         webDriver.get(currentArchivePage);
-        Document page = transformwebDriverContentToJsoupDocument(js);
+        Document page = transformwebDriverContentToJsoupDocument(webDriver);
 
         log.info("scrape page ++ " + pageNumber + " ++");
         if (page != null) {
@@ -207,29 +249,4 @@ public class PropertyParserManager {
         }
         return null;
     }
-
-    private void sleep(int timeInMillis) {
-        try {
-            Thread.sleep(timeInMillis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sleepRandomTime(int minInMillis, int maxInMillis) {
-        int randomNum = ThreadLocalRandom.current().nextInt(minInMillis, maxInMillis + 1);
-        try {
-            Thread.sleep(randomNum);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private Document transformwebDriverContentToJsoupDocument(JavascriptExecutor js) {
-        String   content = (String) js.executeScript("return document.documentElement.outerHTML;");
-        Document page    = Jsoup.parse(content);
-        return page;
-    }
-
 }
