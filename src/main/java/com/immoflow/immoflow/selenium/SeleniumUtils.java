@@ -13,8 +13,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -75,6 +73,22 @@ public class SeleniumUtils {
         log.info(message);
         return options;
     }
+
+    /**
+     * scrolls down the webpage till the given element occurs
+     * @param webDriver
+     * @param element
+     * @param pixelSizePerScroll
+     */
+    public static void scrollDownTillElementIsVisible(JavascriptExecutor webDriver, WebElement element,  int pixelSizePerScroll) {
+        while (!isVisibleInViewport(element)) {
+            log.info("The status of isVisibleInViewport is:" + isVisibleInViewport(element) + " The current pixel size is: " +pixelSizePerScroll);
+            sleepRandomTime(500, 1000);
+            webDriver.executeScript("window.scrollTo(0, " + pixelSizePerScroll + ")");
+            pixelSizePerScroll += pixelSizePerScroll;
+        }
+    }
+
 
     /**
      * checks if an element es visible in the view port from the browser

@@ -36,8 +36,8 @@ public class PropertyParserManager {
         List<PropertyData> propertyDataList = null;
         try {
             propertyDataList = startScraping(webDriver, js);
-        } catch (TimeoutException e) {
-            log.info("exception : " + e);
+        } catch (WebDriverException  e) {
+            log.debug(e.getClass().getName() + " : " + e.getMessage(), e);
             log.info("quit driver and start retry");
             webDriver.quit();
             sleep(2000);
@@ -87,13 +87,7 @@ public class PropertyParserManager {
 
             sleepRandomTime(11000, 15000);
 
-            int pixelSizeToScroll = 1000;
-            while (!isVisibleInViewport(p)) {
-                log.info("The status of isVisibleInViewport is:" + isVisibleInViewport(p) + " The current pixel size is: " +pixelSizeToScroll);
-                sleepRandomTime(500, 1000);
-                ((JavascriptExecutor) webDriver).executeScript("window.scrollTo(0, " + pixelSizeToScroll + ")");
-                pixelSizeToScroll += 1000;
-            }
+            scrollDownTillElementIsVisible((JavascriptExecutor) webDriver, p,1000);
 
             sleepRandomTime(11000, 15000);
             log.info("the button from the property card will be clicked");
@@ -137,6 +131,8 @@ public class PropertyParserManager {
 
         return null;
     }
+
+
 
     private void scrapeFromStartPageTillCitySerch(WebDriver webDriver, String city) {
         webDriver.get("https://www.immobilienscout24.de/");
