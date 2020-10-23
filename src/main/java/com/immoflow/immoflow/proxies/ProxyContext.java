@@ -1,4 +1,4 @@
-package com.immoflow.immoflow.resource;
+package com.immoflow.immoflow.proxies;
 
 import lombok.Data;
 

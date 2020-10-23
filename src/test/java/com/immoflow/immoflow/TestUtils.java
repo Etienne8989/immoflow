@@ -1,6 +1,6 @@
 package com.immoflow.immoflow;
 
-import com.immoflow.immoflow.resource.ProxyContext;
+import com.immoflow.immoflow.proxies.ProxyContext;
 import com.immoflow.immoflow.proxies.ProxyParserJsoup;
 import org.springframework.test.util.ReflectionTestUtils;
 

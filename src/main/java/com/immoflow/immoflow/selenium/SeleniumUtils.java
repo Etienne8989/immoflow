@@ -1,13 +1,9 @@
 package com.immoflow.immoflow.selenium;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -36,14 +32,14 @@ public class SeleniumUtils {
 
     private static ChromeOptions setWebDriverSettings(String proxyIp, String userAgent) {
         ChromeOptions options = new ChromeOptions();
-        String message = "The following settings for the selenium web driver have been set: \n";
+        String        message = "The following settings for the selenium web driver have been set: \n";
 
         if (userAgent != null) {
-            message = message + "--user-agent with user agent " + userAgent + "\n" ;
+            message = message + "--user-agent with user agent " + userAgent + "\n";
             options.addArguments("--user-agent=" + userAgent);
         }
         if (proxyIp != null) {
-            message = message + "--proxy-server with proxy " + proxyIp+ "\n";
+            message = message + "--proxy-server with proxy " + proxyIp + "\n";
             options.addArguments("--proxy-server=" + proxyIp);
         }
         if (seleniumSettings.isExtensionsDisabled()) {
@@ -51,7 +47,7 @@ public class SeleniumUtils {
             options.addArguments("--disable-extensions");
         }
 
-                options.addArguments("--profile-directory=Default");
+        options.addArguments("--profile-directory=Default");
 
         if (seleniumSettings.isIncognitoMode()) {
             message = message + "--incognito\n";
@@ -76,14 +72,22 @@ public class SeleniumUtils {
 
     /**
      * scrolls down the webpage till the given element occurs
+     *
      * @param webDriver
      * @param element
      * @param pixelSizePerScroll
      */
-    public static void scrollDownTillElementIsVisible(JavascriptExecutor webDriver, WebElement element,  int pixelSizePerScroll) {
-        int pixelSize = 1000;
+    public static void scrollDownTillElementIsVisible(JavascriptExecutor webDriver, WebElement element, int pixelSizePerScroll, int timOutInSeconds) {
+        int  pixelSize = 1000;
+        long start     = System.currentTimeMillis();
         while (!isVisibleInViewport(element)) {
-            log.info("The status of isVisibleInViewport is: " + isVisibleInViewport(element) + " The current pixel size is: " +pixelSize);
+            long currentTime = System.currentTimeMillis() - start;
+            long timeLeft =  (timOutInSeconds*1000) - currentTime;
+            log.info("a timeout will occur in {}",  timeLeft);
+            if (currentTime > timeLeft) {
+                throw new TimeoutException("the scrolling has been timed out");
+            }
+            log.info("The status of isVisibleInViewport is: " + isVisibleInViewport(element) + " The current pixel size is: " + pixelSize);
             sleepRandomTime(500, 1000);
             webDriver.executeScript("window.scrollTo(0, " + pixelSize + ")");
             pixelSize += pixelSizePerScroll;
@@ -93,7 +97,9 @@ public class SeleniumUtils {
 
     /**
      * checks if an element es visible in the view port from the browser
+     *
      * @param element
+     *
      * @return
      */
     public static boolean isVisibleInViewport(WebElement element) {
@@ -115,6 +121,7 @@ public class SeleniumUtils {
 
     /**
      * waits until the web site is completely loaded. Should be used after webdriver.get(url) so it can be assured that there is no conflict with the following steps.
+     *
      * @param webDriver
      */
     public static void waitTillSiteIsFullyLoaded(WebDriver webDriver, int timeOutInSeconds) {
@@ -149,7 +156,7 @@ public class SeleniumUtils {
         }
     }
 
-    public static void  sleepRandomTime(int minInMillis, int maxInMillis) {
+    public static void sleepRandomTime(int minInMillis, int maxInMillis) {
         int randomNum = ThreadLocalRandom.current().nextInt(minInMillis, maxInMillis + 1);
         try {
             Thread.sleep(randomNum);

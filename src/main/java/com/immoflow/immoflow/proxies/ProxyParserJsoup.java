@@ -3,8 +3,6 @@ package com.immoflow.immoflow.proxies;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.immoflow.immoflow.resource.ProxyContext;
-import com.immoflow.immoflow.resource.SimpleProxy;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

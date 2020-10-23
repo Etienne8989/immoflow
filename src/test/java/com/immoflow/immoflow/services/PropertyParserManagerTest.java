@@ -2,7 +2,7 @@ package com.immoflow.immoflow.services;
 
 import com.immoflow.immoflow.TestUtils;
 import com.immoflow.immoflow.proxies.ProxyParserJsoup;
-import com.immoflow.immoflow.resource.SimpleProxy;
+import com.immoflow.immoflow.proxies.SimpleProxy;
 import com.immoflow.immoflow.selenium.SeleniumSettings;
 import com.immoflow.immoflow.useragent.UserAgent;
 import com.immoflow.immoflow.useragent.UserAgentFileParser;

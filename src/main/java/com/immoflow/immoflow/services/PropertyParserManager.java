@@ -1,7 +1,7 @@
 package com.immoflow.immoflow.services;
 
 import com.immoflow.immoflow.resource.PropertyData;
-import com.immoflow.immoflow.resource.SimpleProxy;
+import com.immoflow.immoflow.proxies.SimpleProxy;
 import com.immoflow.immoflow.useragent.UserAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
@@ -63,8 +63,10 @@ public class PropertyParserManager {
 
         //archive page
         log.info("start accessing the web site");
+        long startTime = System.currentTimeMillis();
         webDriver.get("https://www.immobilienscout24.de/Suche/de/nordrhein-westfalen/duesseldorf/wohnung-mieten?enteredFrom=one_step_search");
-        log.info("");
+        long endTime = System.currentTimeMillis() - startTime;
+        log.info("accessed the site in {}", endTime);
         waitUntilElementIsVisible(webDriver, By.xpath("//*[@id=\"is24-de\"]/div[1]/div/div[1]/div/div/header/div/div[1]/a/img[2]"));
         sleepRandomTime(7000, 11000);
         List<WebElement> propertyCards = webDriver.findElements(By.className("result-list__listing"));
@@ -80,11 +82,12 @@ public class PropertyParserManager {
 
             sleepRandomTime(11000, 15000);
 
-            scrollDownTillElementIsVisible((JavascriptExecutor) webDriver, p,100);
+            scrollDownTillElementIsVisible((JavascriptExecutor) webDriver, p,100,30);
 
             sleepRandomTime(11000, 15000);
             log.info("the button from the property card will be clicked");
             p.click();
+            log.info("the button from the property card has been clicked");
             sleepRandomTime(8000, 10000);
 
             //wait until immoscout banner appears

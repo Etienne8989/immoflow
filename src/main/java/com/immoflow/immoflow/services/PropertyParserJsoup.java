@@ -1,6 +1,8 @@
 package com.immoflow.immoflow.services;
 
+import com.immoflow.immoflow.proxies.ProxyContext;
 import com.immoflow.immoflow.proxies.ProxyParser;
+import com.immoflow.immoflow.proxies.SimpleProxy;
 import com.immoflow.immoflow.resource.*;
 import com.immoflow.immoflow.useragent.UserAgent;
 import com.immoflow.immoflow.useragent.UserAgentParser;

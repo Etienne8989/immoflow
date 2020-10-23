@@ -1,7 +1,7 @@
 package com.immoflow.immoflow.services;
 
-import com.immoflow.immoflow.resource.ProxyContext;
-import com.immoflow.immoflow.resource.SimpleProxy;
+import com.immoflow.immoflow.proxies.ProxyContext;
+import com.immoflow.immoflow.proxies.SimpleProxy;
 import com.immoflow.immoflow.useragent.UserAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
