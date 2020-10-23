@@ -94,7 +94,7 @@ public class ScrapeUtilsJsoup {
         return page;
     }
 
-    public static ProxyContext buildProxyContext(){
+    public static ProxyContext buildProxyContext() {
         ProxyContext proxyContext = new ProxyContext();
         proxyContext.setSslProxies(true);
         return proxyContext;

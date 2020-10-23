@@ -24,7 +24,7 @@ public class SeleniumSettings implements InitializingBean {
         seleniumSettings = this;
     }
 
-    static SeleniumSettings getStaticSeleniumSettings(){
+    static SeleniumSettings getStaticSeleniumSettings() {
         return seleniumSettings;
     }
 

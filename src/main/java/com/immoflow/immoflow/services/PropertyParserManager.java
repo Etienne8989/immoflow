@@ -1,7 +1,7 @@
 package com.immoflow.immoflow.services;
 
-import com.immoflow.immoflow.resource.PropertyData;
 import com.immoflow.immoflow.proxies.SimpleProxy;
+import com.immoflow.immoflow.resource.PropertyData;
 import com.immoflow.immoflow.useragent.UserAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
@@ -33,7 +33,7 @@ public class PropertyParserManager {
         List<PropertyData> propertyDataList = null;
         try {
             propertyDataList = startScraping(webDriver, js);
-        } catch (WebDriverException  e) {
+        } catch (WebDriverException e) {
             log.debug(e.getClass().getName() + " : " + e.getMessage(), e);
             log.info("quit driver and start retry");
             webDriver.quit();
@@ -82,7 +82,7 @@ public class PropertyParserManager {
 
             sleepRandomTime(11000, 15000);
 
-            scrollDownTillElementIsVisible((JavascriptExecutor) webDriver, p,100,30);
+            scrollDownTillElementIsVisible((JavascriptExecutor) webDriver, p, 100, 30);
 
             sleepRandomTime(11000, 15000);
             log.info("the button from the property card will be clicked");
@@ -127,8 +127,6 @@ public class PropertyParserManager {
 
         return null;
     }
-
-
 
 
     private void scrapeFromStartPageTillCitySerch(WebDriver webDriver, String city) {
@@ -199,9 +197,6 @@ public class PropertyParserManager {
     }
 
 
-
-
-
     private int parseAchivePageCount(WebDriver webDriver) {
         sleepRandomTime(4, 7);
         String firstArchivePage = "https://www.immobilienscout24.de/Suche/de/nordrhein-westfalen/duesseldorf/wohnung-mieten?pagenumber=1";
@@ -242,4 +237,5 @@ public class PropertyParserManager {
         }
         return null;
     }
+
 }

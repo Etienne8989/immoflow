@@ -82,8 +82,8 @@ public class SeleniumUtils {
         long start     = System.currentTimeMillis();
         while (!isVisibleInViewport(element)) {
             long currentTime = System.currentTimeMillis() - start;
-            long timeLeft =  (timOutInSeconds*1000) - currentTime;
-            log.info("a timeout will occur in {}",  timeLeft);
+            long timeLeft    = (timOutInSeconds * 1000) - currentTime;
+            log.info("a timeout will occur in {}", timeLeft);
             if (currentTime > timeLeft) {
                 throw new TimeoutException("the scrolling has been timed out");
             }

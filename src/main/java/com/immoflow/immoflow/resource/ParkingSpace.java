@@ -1,5 +1,6 @@
 package com.immoflow.immoflow.resource;
 
 public enum ParkingSpace {
-    AVAILABLE, NOT_AVAILABLE
+    AVAILABLE,
+    NOT_AVAILABLE
 }

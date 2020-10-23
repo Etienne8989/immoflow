@@ -3,7 +3,9 @@ package com.immoflow.immoflow.services;
 import com.immoflow.immoflow.proxies.ProxyContext;
 import com.immoflow.immoflow.proxies.ProxyParser;
 import com.immoflow.immoflow.proxies.SimpleProxy;
-import com.immoflow.immoflow.resource.*;
+import com.immoflow.immoflow.resource.Keller;
+import com.immoflow.immoflow.resource.ParkingSpace;
+import com.immoflow.immoflow.resource.PropertyData;
 import com.immoflow.immoflow.useragent.UserAgent;
 import com.immoflow.immoflow.useragent.UserAgentParser;
 import lombok.AllArgsConstructor;
@@ -44,7 +46,7 @@ public class PropertyParserJsoup {
         List<SimpleProxy> workingProxies = proxyParser.scrapeProxies(proxyContext);
         Collections.shuffle(workingProxies);
 
-        Document page =getPageByContext(basicUrl,userAgentList,workingProxies);
+        Document page = getPageByContext(basicUrl, userAgentList, workingProxies);
 
         if (page != null) {
             extractAndSetTitle(propertyData, page);
@@ -98,7 +100,6 @@ public class PropertyParserJsoup {
         }
         return page;
     }
-
 
 
     private void extractAndSetAdditionalData(PropertyData propertyData, Document page) {
